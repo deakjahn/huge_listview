@@ -74,7 +74,7 @@ Future<List<XmlItem>> _loadPage(int page, int pageSize) async {
 
 The `waitBuilder` can be a simple centered `CircularProgressIndicator` but a nicer idea
 is if you can provide a `placeholderBuilder` that is, for instance, a mockup of the data
-to arrive. Many apps and site use gray horizontal bars instead of the actual text
+to arrive. Many apps and sites use gray horizontal bars instead of the actual text
 during loading. As an example, here's is a simple function that creates such a bar
 with randomly varying length:
 
@@ -101,7 +101,7 @@ Widget buildWait() {
   return LayoutBuilder(
     builder: (_, constraints) {
       return ListView.builder(
-        itemCount: (constraints.maxHeight / 14).ceil(),
+        itemCount: (constraints.maxHeight / PLACEHOLDER_SIZE).ceil(),
         itemBuilder: (_, index) => buildPlaceholder(),
       );
     },
