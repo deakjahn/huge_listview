@@ -4,7 +4,13 @@ Huge ListView
 A performant `ListView` that can handle any number of items with ease. Unlike other inifinite list approaches,
 it doesn't just add new items to the list, growing to huge sizes in the end, but has a fixed size cache that
 only keeps a handful of pages all the time, discarding old pages as new ones come in. The list asks for a pageful
-of items at once, in an async function, expecting to return a Future<List<T>> of your items.
+of items at once, in an async function, expecting to return a `Future<List<T>>` of your items.
+
+Instead of a regular `ListView`, it uses a `ScrollablePositionedList` inside that makes it possible to scroll
+to specific items rather than scroll positions. The items don't have to be of uniform height, their size differences
+don't affect performance at all. This list implementation, however, doesn't play nice with the regular `Scrollbar`,
+so we use our own ˇDraggableScrollbar` instead. This we we can support both a scrollbar and the usual position-based
+scrolling as well.
 
 The basic idea came from:
 
