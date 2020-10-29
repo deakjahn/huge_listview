@@ -22,7 +22,7 @@ class HugeListView<T> extends StatefulWidget {
   /// Index of an item to initially align within the viewport.
   final int startIndex;
 
-  /// Total number of items the [itemBuilder] can produce.
+  /// Total number of items in the list.
   final int totalCount;
 
   /// Called to build items for the list with the specified [pageIndex].
