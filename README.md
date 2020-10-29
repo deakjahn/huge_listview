@@ -71,3 +71,40 @@ Future<List<XmlItem>> _loadPage(int page, int pageSize) async {
   return result;
 }
 ```
+
+The `waitBuilder` can be a simple centered `CircularProgressIndicator` but a nicer idea
+is if you can provide a `placeholderBuilder` that is, for instance, a mockup of the data
+to arrive. Many apps and site use gray horizontal bars instead of the actual text
+during loading. As an example, here's is a simple function that creates such a bar
+with randomly varying length:
+
+``` dart
+static const int PLACEHOLDER_SIZE = 14;
+
+Widget buildPlaceholder() {
+  double margin = Random().nextDouble() * 50;
+  return Padding(
+    padding: EdgeInsets.fromLTRB(3, 3, 3 + margin, 3),
+    child: Container(
+      height: PLACEHOLDER_SIZE,
+      color: Colors.grey.withOpacity(0.5),
+    ),
+  );
+}
+```
+
+You can pass it directly to `placeholderBuilder` and you can also use it to create
+a whole page of text mockup bars that you can pass to `waitBuilder`:
+
+``` dart
+Widget buildWait() {
+  return LayoutBuilder(
+    builder: (_, constraints) {
+      return ListView.builder(
+        itemCount: (constraints.maxHeight / 14).ceil(),
+        itemBuilder: (_, index) => buildPlaceholder(),
+      );
+    },
+  );
+}
+```
