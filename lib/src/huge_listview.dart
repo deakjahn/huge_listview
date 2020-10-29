@@ -140,7 +140,10 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
                 _frameCallbackInProgress = true;
                 SchedulerBinding.instance.scheduleFrameCallback((d) => _deferredReload(context));
               }
-              return widget.placeholderBuilder(context, index);
+              return ConstrainedBox(
+                constraints: BoxConstraints(minHeight: 10),
+                child: widget.placeholderBuilder(context, index),
+              );
             },
           ),
         );
