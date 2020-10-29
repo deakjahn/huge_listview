@@ -1,7 +1,10 @@
 Huge ListView
 =============
 
-A performant `ListView` that can handle any number of items with ease.
+A performant `ListView` that can handle any number of items with ease. Unlike other inifinite list approaches,
+it doesn't just add new items to the list, growing to huge sizes in the end, but has a fixed size cache that
+only keeps a handful of pages all the time, discarding old pages as new ones come in. The list asks for a pageful
+of items at once, in an async function, expecting to return a Future<List<T>> of your items.
 
 The basic idea came from:
 
