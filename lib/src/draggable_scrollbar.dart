@@ -1,25 +1,32 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:huge_listview/src/arrows_thumb.dart';
+import 'package:huge_listview/src/draggable_scrollbar_thumbs.dart';
 
 class DraggableScrollbar extends StatefulWidget {
   final Widget child;
+  final Color backgroundColor;
+  final Color drawColor;
   final double heightScrollThumb;
   final EdgeInsetsGeometry padding;
   final int totalCount;
   final int initialScrollIndex;
   final ValueChanged<double> onChange;
+  final ScrollThumbBuilder scrollThumbBuilder;
 
   DraggableScrollbar({
     Key key,
     @required this.child,
+    this.backgroundColor = Colors.white,
+    this.drawColor = Colors.grey,
     this.heightScrollThumb = 48.0,
     this.padding,
     this.totalCount = 1,
     this.initialScrollIndex = 0,
+    @required this.scrollThumbBuilder,
     this.onChange,
   })  : assert(child != null),
+        assert(scrollThumbBuilder != null),
         super(key: key);
 
   @override
@@ -72,10 +79,7 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
           alignment: Alignment.topRight,
           margin: EdgeInsets.only(top: thumbOffset),
           padding: widget.padding,
-          child: buildThumb(
-            width: widget.heightScrollThumb * 0.6,
-            height: widget.heightScrollThumb,
-          ),
+          child: widget.scrollThumbBuilder?.call(widget.backgroundColor, widget.drawColor, widget.heightScrollThumb),
         ),
       );
 
@@ -84,21 +88,6 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
       thumbOffset = position * (thumbMax - thumbMin);
     });
   }
-
-  Widget buildThumb({double width, double height}) => CustomPaint(
-        foregroundPainter: ArrowCustomPainter(context),
-        child: Material(
-          elevation: 4.0,
-          child: Container(constraints: BoxConstraints.tight(Size(width, height))),
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(height),
-            bottomLeft: Radius.circular(height),
-            topRight: Radius.circular(4.0),
-            bottomRight: Radius.circular(4.0),
-          ),
-        ),
-      );
 
   void onDragStart(DragStartDetails details) {
     setState(() => isDragging = true);

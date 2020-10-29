@@ -44,6 +44,15 @@ HugeListView<MyDataItem>(
   itemBuilder: (context, index, entry) {
     return Text(entry.name);
   },
+  /// Called to build the thumb. One of [DraggableScrollbarThumbs.RoundedRectThumb], [DraggableScrollbarThumbs.ArrowThumb]
+  /// or [DraggableScrollbarThumbs.SemicircleThumb], or build your own.
+  thumbBuilder: DraggableScrollbarThumbs.SemicircleThumb,
+  /// Background color of scroll thumb, defaults to white.
+  thumbBackgroundColor: Colors.white,
+  /// Drawing color of scroll thumb, defaults to gray.
+  thumbDrawColor: Colors.grey,
+  /// Height of scroll thumb, defaults to 48.
+  thumbHeight: 48,
   /// Called to build a placeholder while the item is not yet availabe.
   placeholderBuilder: (context, index) => <some Widget>,
   /// Called to build a progress widget while the whole list is initialized.

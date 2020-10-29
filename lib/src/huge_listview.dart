@@ -3,6 +3,7 @@ import 'dart:math' show max;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:huge_listview/src/draggable_scrollbar.dart';
+import 'package:huge_listview/src/draggable_scrollbar_thumbs.dart';
 import 'package:huge_listview/src/page_result.dart';
 import 'package:quiver/cache.dart';
 import 'package:quiver/collection.dart';
@@ -27,6 +28,19 @@ class HugeListView<T> extends StatefulWidget {
 
   /// Called to build items for the list with the specified [pageIndex].
   final HugeListViewPageFuture<T> pageFuture;
+
+  /// Called to build the thumb. One of [DraggableScrollbarThumbs.RoundedRectThumb], [DraggableScrollbarThumbs.ArrowThumb]
+  /// or [DraggableScrollbarThumbs.SemicircleThumb], or build your own.
+  final ScrollThumbBuilder thumbBuilder;
+
+  /// Background color of scroll thumb, defaults to white.
+  final Color thumbBackgroundColor;
+
+  /// Drawing color of scroll thumb, defaults to gray.
+  final Color thumbDrawColor;
+
+  /// Height of scroll thumb, defaults to 48.
+  final double thumbHeight;
 
   /// Called to build an individual item with the specified [index].
   final HugeListViewItemBuilder<T> itemBuilder;
@@ -57,6 +71,7 @@ class HugeListView<T> extends StatefulWidget {
     @required this.startIndex,
     @required this.totalCount,
     @required this.pageFuture,
+    @required this.thumbBuilder,
     @required this.itemBuilder,
     @required this.placeholderBuilder,
     this.waitBuilder,
@@ -64,9 +79,13 @@ class HugeListView<T> extends StatefulWidget {
     this.errorBuilder,
     this.velocityThreshold = 128,
     this.firstShown,
+    this.thumbBackgroundColor = Colors.white,
+    this.thumbDrawColor = Colors.grey,
+    this.thumbHeight = 48.0,
   })  : assert(pageSize > 0),
         assert(pageFuture != null),
         assert(totalCount != null),
+        assert(thumbBuilder != null),
         assert(itemBuilder != null),
         assert(placeholderBuilder != null),
         assert(velocityThreshold >= 0),
@@ -117,6 +136,10 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
           onChange: (position) {
             widget.controller.jumpTo(index: (position * widget.totalCount).floor());
           },
+          scrollThumbBuilder: widget.thumbBuilder,
+          backgroundColor: widget.thumbBackgroundColor,
+          drawColor: widget.thumbDrawColor,
+          heightScrollThumb: widget.thumbHeight,
           child: ScrollablePositionedList.builder(
             itemScrollController: widget.controller,
             itemPositionsListener: listener,
