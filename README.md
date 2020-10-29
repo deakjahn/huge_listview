@@ -16,10 +16,10 @@ The scrollbar is based on:
 ``` dart
 static const int PAGE_SIZE = 12;
 
-// Only needed if you expect to make use of its [setPosition] function.
+// Only needed if you expect to make use of its `setPosition` function.
 final listKey = GlobalKey<HugeListViewState>();
 
-// Only needed if you expect to make use of its [jumpTo] or [scrollTo] functions.
+// Only needed if you expect to make use of its `jumpTo` or `scrollTo` functions.
 final scroll = ItemScrollController();
 
 HugeListView<MyDataItem>(
@@ -29,16 +29,16 @@ HugeListView<MyDataItem>(
   totalCount: 999999,
   startIndex: 0,
   pageFuture: (page) => _loadPage(page, PAGE_SIZE),
-  itemBuilder: (_, index, entry) {
+  itemBuilder: (context, index, entry) {
     return Text(entry.name);
   },
-  placeholderBuilder: (_, index) => <some Widget>,
-  waitBuilder: (_) => <some Widget>,
+  placeholderBuilder: (context, index) => <some Widget>,
+  waitBuilder: (context) => <some Widget>,
   firstShown: (index) {},
 );
 ```
 
-You have to pass a list of your items to [pageFuture], for instance, given a list named [data]:
+You have to pass a list of your items to `pageFuture`, for instance, given a list named `data`:
 
 ``` dart
 Future<List<XmlItem>> _loadPage(int page, int pageSize) async {
