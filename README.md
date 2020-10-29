@@ -28,19 +28,19 @@ final listKey = GlobalKey<HugeListViewState>();
 final scroll = ItemScrollController();
 
 HugeListView<MyDataItem>(
-  /// Only needed if you expect to make use of its `setPosition` function.
+  /// Only needed if you expect to make use of its [setPosition] function.
   key: listKey,
-  /// Only needed if you expect to make use of its `jumpTo` or `scrollTo` functions.
+  /// Only needed if you expect to make use of its [jumpTo] or [scrollTo] functions.
   controller: scroll,
-  /// Size of the page. `HugeListView` only keeps a few pages of items in memory any time.
+  /// Size of the page. [HugeListView] only keeps a few pages of items in memory any time.
   pageSize: PAGE_SIZE,
   /// Total number of items in the list.
   totalCount: 999999,
   /// Index of an item to initially align within the viewport.
   startIndex: 0,
-  /// Called to build items for the list with the specified `pageIndex`.
+  /// Called to build items for the list with the specified [pageIndex].
   pageFuture: (page) => _loadPage(page, PAGE_SIZE),
-  /// Called to build an individual item with the specified `index`.
+  /// Called to build an individual item with the specified [index].
   itemBuilder: (context, index, entry) {
     return Text(entry.name);
   },
