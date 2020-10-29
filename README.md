@@ -24,15 +24,13 @@ The scrollbar is based on:
 
 ``` dart
 static const int PAGE_SIZE = 12;
-
-// Only needed if you expect to make use of its `setPosition` function.
 final listKey = GlobalKey<HugeListViewState>();
-
-// Only needed if you expect to make use of its `jumpTo` or `scrollTo` functions.
 final scroll = ItemScrollController();
 
 HugeListView<MyDataItem>(
+  /// Only needed if you expect to make use of its `setPosition` function.
   key: listKey,
+  /// Only needed if you expect to make use of its `jumpTo` or `scrollTo` functions.
   controller: scroll,
   /// Size of the page. `HugeListView` only keeps a few pages of items in memory any time.
   pageSize: PAGE_SIZE,
