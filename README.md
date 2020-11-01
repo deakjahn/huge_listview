@@ -80,7 +80,7 @@ Future<List<XmlItem>> _loadPage(int page, int pageSize) async {
 The `waitBuilder` can be a simple centered `CircularProgressIndicator` but a nicer idea is
 to provide a `placeholderBuilder` that is a mockup of the data to arrive. Many apps and sites
 use gray horizontal bars instead of the actual text during loading. As an example,
-here's is a simple function that creates such a bar with randomly varying length:
+here is a simple function that creates such a bar with randomly varying length:
 
 ``` dart
 static const int PLACEHOLDER_SIZE = 14;
