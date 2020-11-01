@@ -44,8 +44,8 @@ HugeListView<MyDataItem>(
   itemBuilder: (context, index, entry) {
     return Text(entry.name);
   },
-  /// Called to build the thumb. One of [DraggableScrollbarThumbs.RoundedRectThumb], [DraggableScrollbarThumbs.ArrowThumb]
-  /// or [DraggableScrollbarThumbs.SemicircleThumb], or build your own.
+  /// Called to build the thumb. One of [DraggableScrollbarThumbs.RoundedRectThumb], [DraggableScrollbarThumbs.ArrowThumb],
+  /// [DraggableScrollbarThumbs.SemicircleThumb] or build your own.
   thumbBuilder: DraggableScrollbarThumbs.SemicircleThumb,
   /// Background color of scroll thumb, defaults to white.
   thumbBackgroundColor: Colors.white,
@@ -62,7 +62,7 @@ HugeListView<MyDataItem>(
   /// Called to build a widget when there is an error.
   errorBuilder: (context, error) => <some Widget>,
   /// Event to call with the index of the topmost visible item in the viewport while scrolling.
-  /// Can be used to display the current letter of an alphabetically sorted list, for instance.
+  /// Can be used eg. to display the current letter of an alphabetically sorted list.
   firstShown: (index) {},
 );
 ```
@@ -71,21 +71,16 @@ You have to pass a list of your items to `pageFuture`, for instance, given a lis
 
 ``` dart
 Future<List<XmlItem>> _loadPage(int page, int pageSize) async {
-  final result = <MyDataItem>[];
   int from = page * pageSize;
   int to = min(data.length, from + pageSize);
-  for (int i = from; i < to; i++) {
-    result.add(data.elementAt(i));
-  }
-  return result;
+  return data.sublist(from, to);
 }
 ```
 
-The `waitBuilder` can be a simple centered `CircularProgressIndicator` but a nicer idea
-is if you can provide a `placeholderBuilder` that is, for instance, a mockup of the data
-to arrive. Many apps and sites use gray horizontal bars instead of the actual text
-during loading. As an example, here's is a simple function that creates such a bar
-with randomly varying length:
+The `waitBuilder` can be a simple centered `CircularProgressIndicator` but a nicer idea is
+to provide a `placeholderBuilder` that is a mockup of the data to arrive. Many apps and sites
+use gray horizontal bars instead of the actual text during loading. As an example,
+here's is a simple function that creates such a bar with randomly varying length:
 
 ``` dart
 static const int PLACEHOLDER_SIZE = 14;
@@ -96,7 +91,7 @@ Widget buildPlaceholder() {
     padding: EdgeInsets.fromLTRB(3, 3, 3 + margin, 3),
     child: Container(
       height: PLACEHOLDER_SIZE,
-      color: Colors.grey.withOpacity(0.5),
+      color: Colors.grey,
     ),
   );
 }
