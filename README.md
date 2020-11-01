@@ -70,7 +70,7 @@ HugeListView<MyDataItem>(
 You have to pass a list of your items to `pageFuture`, for instance, given a list named `data`:
 
 ``` dart
-Future<List<XmlItem>> _loadPage(int page, int pageSize) async {
+Future<List<MyDataItem>> _loadPage(int page, int pageSize) async {
   int from = page * pageSize;
   int to = min(data.length, from + pageSize);
   return data.sublist(from, to);
