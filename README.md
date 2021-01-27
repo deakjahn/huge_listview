@@ -41,7 +41,7 @@ HugeListView<MyDataItem>(
   /// Called to build items for the list with the specified [pageIndex].
   pageFuture: (page) => _loadPage(page, PAGE_SIZE),
   /// Called to build an individual item with the specified [index].
-  itemBuilder: (context, index, entry) {
+  itemBuilder: (context, index, MyDataItem entry) {
     return Text(entry.name);
   },
   /// Called to build the thumb. One of [DraggableScrollbarThumbs.RoundedRectThumb], [DraggableScrollbarThumbs.ArrowThumb],

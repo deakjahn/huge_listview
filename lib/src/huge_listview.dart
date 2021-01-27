@@ -108,17 +108,19 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
     super.initState();
 
     _initCache();
-    listener.itemPositions.addListener(_sendFirst);
+    listener.itemPositions.addListener(_sendScroll);
   }
 
   @override
   void dispose() {
-    listener.itemPositions.removeListener(_sendFirst);
+    listener.itemPositions.removeListener(_sendScroll);
     super.dispose();
   }
 
-  void _sendFirst() {
-    widget.firstShown?.call(listener.itemPositions.value.first.index);
+  void _sendScroll() {
+    int current = listener.itemPositions.value.first.index;
+    widget.firstShown?.call(current);
+    scrollKey.currentState?.setPosition(current / widget.totalCount);
   }
 
   @override
