@@ -11,6 +11,7 @@ class DraggableScrollbar extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final int totalCount;
   final int initialScrollIndex;
+  final int currentFirstIndex;
   final ValueChanged<double> onChange;
   final ScrollThumbBuilder scrollThumbBuilder;
 
@@ -23,6 +24,7 @@ class DraggableScrollbar extends StatefulWidget {
     this.padding,
     this.totalCount = 1,
     this.initialScrollIndex = 0,
+    this.currentFirstIndex = 0,
     @required this.scrollThumbBuilder,
     this.onChange,
   })  : assert(child != null),
@@ -79,7 +81,7 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
           alignment: Alignment.topRight,
           margin: EdgeInsets.only(top: thumbOffset),
           padding: widget.padding,
-          child: widget.scrollThumbBuilder?.call(widget.backgroundColor, widget.drawColor, widget.heightScrollThumb),
+          child: widget.scrollThumbBuilder?.call(widget.backgroundColor, widget.drawColor, widget.heightScrollThumb, widget.currentFirstIndex),
         ),
       );
 

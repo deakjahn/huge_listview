@@ -94,14 +94,14 @@ packages:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.4+1"
+    version: "2.1.5"
   scrollable_positioned_list:
     dependency: "direct main"
     description:
       name: scrollable_positioned_list
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.8"
+    version: "0.1.9"
   sky_engine:
     dependency: transitive
     description: flutter

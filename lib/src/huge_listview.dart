@@ -118,9 +118,18 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   }
 
   void _sendScroll() {
-    int current = listener.itemPositions.value.first.index;
+    int current = _currentFirst();
     widget.firstShown?.call(current);
     scrollKey.currentState?.setPosition(current / widget.totalCount);
+  }
+
+  int _currentFirst() {
+    try {
+      return listener.itemPositions.value.first.index;
+    }
+    catch (e) {
+      return 0;
+    }
   }
 
   @override
@@ -142,6 +151,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
           backgroundColor: widget.thumbBackgroundColor,
           drawColor: widget.thumbDrawColor,
           heightScrollThumb: widget.thumbHeight,
+          currentFirstIndex: _currentFirst(),
           child: ScrollablePositionedList.builder(
             itemScrollController: widget.controller,
             itemPositionsListener: listener,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-typedef ScrollThumbBuilder = Widget Function(Color backgroundColor, Color drawColor, double height);
+typedef ScrollThumbBuilder = Widget Function(Color backgroundColor, Color drawColor, double height, int index);
 
 class DraggableScrollbarThumbs {
-  static Widget RoundedRectThumb(Color backgroundColor, Color drawColor, double height) {
+  static Widget RoundedRectThumb(Color backgroundColor, Color drawColor, double height, int index) {
     return Material(
       elevation: 4.0,
       child: Container(
@@ -14,7 +14,7 @@ class DraggableScrollbarThumbs {
     );
   }
 
-  static Widget ArrowThumb(Color backgroundColor, Color drawColor, double height) {
+  static Widget ArrowThumb(Color backgroundColor, Color drawColor, double height, int index) {
     return ClipPath(
       child: Container(
         width: 20.0,
@@ -28,7 +28,7 @@ class DraggableScrollbarThumbs {
     );
   }
 
-  static Widget SemicircleThumb(Color backgroundColor, Color drawColor, double height) {
+  static Widget SemicircleThumb(Color backgroundColor, Color drawColor, double height, int index) {
     return CustomPaint(
       foregroundPainter: _ArrowCustomPainter(drawColor),
       child: Material(
