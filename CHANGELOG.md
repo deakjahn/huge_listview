@@ -1,3 +1,9 @@
+# Changelog
+
+## [2.0.0] - 2021-02-28
+
+* Null safety
+
 ## [1.0.2] - 2021-02-08
 
 * Fix #2 (https://github.com/deakjahn/huge_listview/issues/2).

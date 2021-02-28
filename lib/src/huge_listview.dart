@@ -15,7 +15,7 @@ typedef HugeListViewErrorBuilder = Widget Function(BuildContext context, dynamic
 
 class HugeListView<T> extends StatefulWidget {
   /// A [ScrollablePositionedList] controller for jumping or scrolling to an item.
-  final ItemScrollController controller;
+  final ItemScrollController? controller;
 
   /// Size of the page. [HugeListView] only keeps a few pages of items in memory any time.
   final int pageSize;
@@ -49,31 +49,31 @@ class HugeListView<T> extends StatefulWidget {
   final IndexedWidgetBuilder placeholderBuilder;
 
   /// Called to build a progress widget while the whole list is initialized.
-  final WidgetBuilder waitBuilder;
+  final WidgetBuilder? waitBuilder;
 
   /// Called to build a widget when the list is empty.
-  final WidgetBuilder emptyResultBuilder;
+  final WidgetBuilder? emptyResultBuilder;
 
   /// Called to build a widget when there is an error.
-  final HugeListViewErrorBuilder errorBuilder;
+  final HugeListViewErrorBuilder? errorBuilder;
 
   /// The velocity above which the individual items stop being drawn until the scrolling rate drops.
   final double velocityThreshold;
 
   /// Event to call with the index of the topmost visible item in the viewport while scrolling.
   /// Can be used to display the current letter of an alphabetically sorted list, for instance.
-  final ValueChanged<int> firstShown;
+  final ValueChanged<int>? firstShown;
 
   HugeListView({
-    Key key,
+    Key? key,
     this.controller,
-    @required this.pageSize,
-    @required this.startIndex,
-    @required this.totalCount,
-    @required this.pageFuture,
-    @required this.thumbBuilder,
-    @required this.itemBuilder,
-    @required this.placeholderBuilder,
+    required this.pageSize,
+    required this.startIndex,
+    required this.totalCount,
+    required this.pageFuture,
+    required this.thumbBuilder,
+    required this.itemBuilder,
+    required this.placeholderBuilder,
     this.waitBuilder,
     this.emptyResultBuilder,
     this.errorBuilder,
@@ -83,11 +83,6 @@ class HugeListView<T> extends StatefulWidget {
     this.thumbDrawColor = Colors.grey,
     this.thumbHeight = 48.0,
   })  : assert(pageSize > 0),
-        assert(pageFuture != null),
-        assert(totalCount != null),
-        assert(thumbBuilder != null),
-        assert(itemBuilder != null),
-        assert(placeholderBuilder != null),
         assert(velocityThreshold >= 0),
         super(key: key);
 
@@ -98,8 +93,8 @@ class HugeListView<T> extends StatefulWidget {
 class HugeListViewState<T> extends State<HugeListView<T>> {
   final scrollKey = GlobalKey<DraggableScrollbarState>();
   final listener = ItemPositionsListener.create();
-  Map<int, HugeListViewPageResult<T>> map;
-  MapCache<int, HugeListViewPageResult<T>> cache;
+  late Map<int, HugeListViewPageResult<T>> map;
+  late MapCache<int, HugeListViewPageResult<T>?> cache;
   dynamic error;
   bool _frameCallbackInProgress = false;
 
@@ -134,9 +129,9 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    if (error != null && widget.errorBuilder != null) return widget.errorBuilder(context, error);
-    if (widget.totalCount == -1 && widget.waitBuilder != null) return widget.waitBuilder(context);
-    if (widget.totalCount == 0 && widget.emptyResultBuilder != null) return widget.emptyResultBuilder(context);
+    if (error != null && widget.errorBuilder != null) return widget.errorBuilder!(context, error);
+    if (widget.totalCount == -1 && widget.waitBuilder != null) return widget.waitBuilder!(context);
+    if (widget.totalCount == 0 && widget.emptyResultBuilder != null) return widget.emptyResultBuilder!(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -145,7 +140,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
           totalCount: widget.totalCount,
           initialScrollIndex: widget.startIndex,
           onChange: (position) {
-            widget.controller.jumpTo(index: (position * widget.totalCount).floor());
+            widget.controller?.jumpTo(index: (position * widget.totalCount).floor());
           },
           scrollThumbBuilder: widget.thumbBuilder,
           backgroundColor: widget.thumbBackgroundColor,
@@ -161,7 +156,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
             itemBuilder: (context, index) {
               final page = index ~/ widget.pageSize;
               final pageResult = map[page];
-              final value = pageResult?.items?.elementAt(index % widget.pageSize);
+              final value = pageResult?.items.elementAt(index % widget.pageSize);
               if (value != null) {
                 return widget.itemBuilder(context, index, value);
               }
@@ -173,7 +168,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
                     .catchError(_error);
               } else if (!_frameCallbackInProgress) {
                 _frameCallbackInProgress = true;
-                SchedulerBinding.instance.scheduleFrameCallback((d) => _deferredReload(context));
+                SchedulerBinding.instance?.scheduleFrameCallback((d) => _deferredReload(context));
               }
               return ConstrainedBox(
                 constraints: BoxConstraints(minHeight: 10),
@@ -200,14 +195,14 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
     if (mounted) setState(() => error = e);
   }
 
-  void _reload(HugeListViewPageResult<T> value) => _doReload(value.index);
+  void _reload(HugeListViewPageResult<T>? value) => _doReload(value?.index ?? 0);
 
   void _deferredReload(BuildContext context) {
     if (!Scrollable.recommendDeferredLoadingForContext(context)) {
       _frameCallbackInProgress = false;
       _doReload(-1);
     } else
-      SchedulerBinding.instance.scheduleFrameCallback((d) => _deferredReload(context), rescheduling: true);
+      SchedulerBinding.instance?.scheduleFrameCallback((d) => _deferredReload(context), rescheduling: true);
   }
 
   void _doReload(int index) {
@@ -224,7 +219,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
 class _MaxVelocityPhysics extends AlwaysScrollableScrollPhysics {
   final double velocityThreshold;
 
-  _MaxVelocityPhysics({@required this.velocityThreshold, ScrollPhysics parent}) : super(parent: parent);
+  _MaxVelocityPhysics({required this.velocityThreshold, ScrollPhysics? parent}) : super(parent: parent);
 
   @override
   bool recommendDeferredLoading(double velocity, ScrollMetrics metrics, BuildContext context) {
@@ -232,7 +227,7 @@ class _MaxVelocityPhysics extends AlwaysScrollableScrollPhysics {
   }
 
   @override
-  _MaxVelocityPhysics applyTo(ScrollPhysics ancestor) {
+  _MaxVelocityPhysics applyTo(ScrollPhysics? ancestor) {
     return _MaxVelocityPhysics(velocityThreshold: velocityThreshold, parent: buildParent(ancestor));
   }
 }

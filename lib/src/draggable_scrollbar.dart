@@ -8,16 +8,16 @@ class DraggableScrollbar extends StatefulWidget {
   final Color backgroundColor;
   final Color drawColor;
   final double heightScrollThumb;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? padding;
   final int totalCount;
   final int initialScrollIndex;
   final int currentFirstIndex;
-  final ValueChanged<double> onChange;
+  final ValueChanged<double>? onChange;
   final ScrollThumbBuilder scrollThumbBuilder;
 
   DraggableScrollbar({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.backgroundColor = Colors.white,
     this.drawColor = Colors.grey,
     this.heightScrollThumb = 48.0,
@@ -25,11 +25,9 @@ class DraggableScrollbar extends StatefulWidget {
     this.totalCount = 1,
     this.initialScrollIndex = 0,
     this.currentFirstIndex = 0,
-    @required this.scrollThumbBuilder,
+    required this.scrollThumbBuilder,
     this.onChange,
-  })  : assert(child != null),
-        assert(scrollThumbBuilder != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   DraggableScrollbarState createState() => DraggableScrollbarState();
@@ -41,14 +39,14 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
 
   double get thumbMin => 0.0;
 
-  double get thumbMax => context.size.height - widget.heightScrollThumb;
+  double get thumbMax => context.size!.height - widget.heightScrollThumb;
 
   @override
   void initState() {
     super.initState();
 
     if (widget.initialScrollIndex > 0 && widget.totalCount > 1) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
         setState(() => thumbOffset = (widget.initialScrollIndex / widget.totalCount) * (thumbMax - thumbMin));
       });
     }
@@ -81,7 +79,7 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
           alignment: Alignment.topRight,
           margin: EdgeInsets.only(top: thumbOffset),
           padding: widget.padding,
-          child: widget.scrollThumbBuilder?.call(widget.backgroundColor, widget.drawColor, widget.heightScrollThumb, widget.currentFirstIndex),
+          child: widget.scrollThumbBuilder.call(widget.backgroundColor, widget.drawColor, widget.heightScrollThumb, widget.currentFirstIndex),
         ),
       );
 
