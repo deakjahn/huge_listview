@@ -93,8 +93,8 @@ class HugeListView<T> extends StatefulWidget {
 class HugeListViewState<T> extends State<HugeListView<T>> {
   final scrollKey = GlobalKey<DraggableScrollbarState>();
   final listener = ItemPositionsListener.create();
-  late Map<int, HugeListViewPageResult<T>> map;
-  late MapCache<int, HugeListViewPageResult<T>?> cache;
+  late final Map<int, HugeListViewPageResult<T>> map;
+  late final MapCache<int, HugeListViewPageResult<T>?> cache;
   dynamic error;
   bool _frameCallbackInProgress = false;
 
