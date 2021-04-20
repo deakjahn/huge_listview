@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.0.1] - 2021-04-20
+
+* PR #3 (https://github.com/deakjahn/huge_listview/pull/3).
+* Some source code pedantic changes.
+
 ## [2.0.0] - 2021-02-28
 
 * Null safety
