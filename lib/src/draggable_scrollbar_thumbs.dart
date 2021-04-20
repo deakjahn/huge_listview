@@ -6,16 +6,17 @@ class DraggableScrollbarThumbs {
   static Widget RoundedRectThumb(Color backgroundColor, Color drawColor, double height, int index) {
     return Material(
       elevation: 4.0,
+      color: backgroundColor,
+      borderRadius: BorderRadius.all(Radius.circular(7.0)),
       child: Container(
         constraints: BoxConstraints.tight(Size(16.0, height)),
       ),
-      color: backgroundColor,
-      borderRadius: BorderRadius.all(Radius.circular(7.0)),
     );
   }
 
   static Widget ArrowThumb(Color backgroundColor, Color drawColor, double height, int index) {
     return ClipPath(
+      clipper: _ArrowClipper(),
       child: Container(
         width: 20.0,
         height: height,
@@ -24,7 +25,6 @@ class DraggableScrollbarThumbs {
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),
       ),
-      clipper: _ArrowClipper(),
     );
   }
 
@@ -33,7 +33,6 @@ class DraggableScrollbarThumbs {
       foregroundPainter: _ArrowCustomPainter(drawColor),
       child: Material(
         elevation: 4.0,
-        child: Container(constraints: BoxConstraints.tight(Size(height * 0.6, height))),
         color: backgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(height),
@@ -41,6 +40,7 @@ class DraggableScrollbarThumbs {
           topRight: Radius.circular(4.0),
           bottomRight: Radius.circular(4.0),
         ),
+        child: Container(constraints: BoxConstraints.tight(Size(height * 0.6, height))),
       ),
     );
   }
