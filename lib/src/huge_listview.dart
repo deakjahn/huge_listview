@@ -69,6 +69,8 @@ class HugeListView<T> extends StatefulWidget {
   /// Defaults to [Axis.vertical].
   final Axis scrollDirection;
 
+  final EdgeInsets? padding;
+
   HugeListView({
     Key? key,
     this.controller,
@@ -88,6 +90,7 @@ class HugeListView<T> extends StatefulWidget {
     this.thumbBackgroundColor = Colors.white,
     this.thumbDrawColor = Colors.grey,
     this.thumbHeight = 48.0,
+    this.padding
   })  : assert(pageSize > 0),
         assert(velocityThreshold >= 0),
         super(key: key);
@@ -155,6 +158,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
           heightScrollThumb: widget.thumbHeight,
           currentFirstIndex: _currentFirst(),
           child: ScrollablePositionedList.builder(
+            padding: widget.padding,
             itemScrollController: widget.controller,
             itemPositionsListener: listener,
             scrollDirection: widget.scrollDirection,
