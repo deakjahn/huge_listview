@@ -16,7 +16,20 @@ class DraggableScrollbar extends StatefulWidget {
   final ScrollThumbBuilder scrollThumbBuilder;
   final Axis scrollDirection;
 
-  DraggableScrollbar({Key? key, required this.child, this.backgroundColor = Colors.white, this.drawColor = Colors.grey, this.heightScrollThumb = 48.0, this.padding, this.totalCount = 1, this.initialScrollIndex = 0, this.currentFirstIndex = 0, required this.scrollThumbBuilder, this.onChange, this.scrollDirection = Axis.vertical}) : super(key: key);
+  DraggableScrollbar({
+    Key? key,
+    required this.child,
+    this.backgroundColor = Colors.white,
+    this.drawColor = Colors.grey,
+    this.heightScrollThumb = 48.0,
+    this.padding,
+    this.totalCount = 1,
+    this.initialScrollIndex = 0,
+    this.currentFirstIndex = 0,
+    required this.scrollThumbBuilder,
+    this.onChange,
+    this.scrollDirection = Axis.vertical,
+  }) : super(key: key);
 
   @override
   DraggableScrollbarState createState() => DraggableScrollbarState();
