@@ -145,6 +145,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
           key: scrollKey,
           totalCount: widget.totalCount,
           initialScrollIndex: widget.startIndex,
+          scrollDirection: widget.scrollDirection,
           onChange: (position) {
             widget.controller?.jumpTo(index: (position * widget.totalCount).floor());
           },
