@@ -64,6 +64,11 @@ class HugeListView<T> extends StatefulWidget {
   /// Can be used to display the current letter of an alphabetically sorted list, for instance.
   final ValueChanged<int>? firstShown;
 
+  /// The axis along which the list view scrolls.
+  ///
+  /// Defaults to [Axis.vertical].
+  final Axis scrollDirection;
+
   HugeListView({
     Key? key,
     this.controller,
@@ -79,6 +84,7 @@ class HugeListView<T> extends StatefulWidget {
     this.errorBuilder,
     this.velocityThreshold = 128,
     this.firstShown,
+    this.scrollDirection = Axis.vertical,
     this.thumbBackgroundColor = Colors.white,
     this.thumbDrawColor = Colors.grey,
     this.thumbHeight = 48.0,
@@ -150,6 +156,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
           child: ScrollablePositionedList.builder(
             itemScrollController: widget.controller,
             itemPositionsListener: listener,
+            scrollDirection: widget.scrollDirection,
             physics: _MaxVelocityPhysics(velocityThreshold: widget.velocityThreshold),
             initialScrollIndex: widget.startIndex,
             itemCount: max(widget.totalCount, 0),
