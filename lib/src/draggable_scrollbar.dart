@@ -16,20 +16,7 @@ class DraggableScrollbar extends StatefulWidget {
   final ScrollThumbBuilder scrollThumbBuilder;
   final Axis scrollDirection;
 
-  DraggableScrollbar({
-    Key? key,
-    required this.child,
-    this.backgroundColor = Colors.white,
-    this.drawColor = Colors.grey,
-    this.heightScrollThumb = 48.0,
-    this.padding,
-    this.totalCount = 1,
-    this.initialScrollIndex = 0,
-    this.currentFirstIndex = 0,
-    required this.scrollThumbBuilder,
-    this.onChange,
-    this.scrollDirection = Axis.vertical
-  }) : super(key: key);
+  DraggableScrollbar({Key? key, required this.child, this.backgroundColor = Colors.white, this.drawColor = Colors.grey, this.heightScrollThumb = 48.0, this.padding, this.totalCount = 1, this.initialScrollIndex = 0, this.currentFirstIndex = 0, required this.scrollThumbBuilder, this.onChange, this.scrollDirection = Axis.vertical}) : super(key: key);
 
   @override
   DraggableScrollbarState createState() => DraggableScrollbarState();
@@ -42,9 +29,9 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
 
   double get thumbMin => 0.0;
 
-  double get thumbMax => widget.scrollDirection == Axis.vertical ?
-  context.size!.height - widget.heightScrollThumb:
-  context.size!.width - widget.heightScrollThumb;
+  double get thumbMax => widget.scrollDirection == Axis.vertical //
+      ? context.size!.height - widget.heightScrollThumb
+      : context.size!.width - widget.heightScrollThumb;
 
   @override
   void initState() {
@@ -85,12 +72,12 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
         onHorizontalDragUpdate: onDragUpdate,
         onHorizontalDragEnd: onDragEnd,
         child: Container(
-          alignment: widget.scrollDirection == Axis.vertical ?
-          Alignment.topRight:
-          Alignment.bottomLeft,
-          margin: widget.scrollDirection == Axis.vertical ?
-          EdgeInsets.only(top: thumbOffset):
-          EdgeInsets.only(left: thumbOffset),
+          alignment: widget.scrollDirection == Axis.vertical //
+              ? Alignment.topRight
+              : Alignment.bottomLeft,
+          margin: widget.scrollDirection == Axis.vertical //
+              ? EdgeInsets.only(top: thumbOffset)
+              : EdgeInsets.only(left: thumbOffset),
           padding: widget.padding,
           child: widget.scrollThumbBuilder.call(widget.backgroundColor, widget.drawColor, widget.heightScrollThumb, currentFirstIndex),
         ),
@@ -110,12 +97,11 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
   void onDragUpdate(DragUpdateDetails details) {
     setState(() {
       if (isDragging && details.delta.dy != 0 && widget.scrollDirection == Axis.vertical) {
-         thumbOffset += details.delta.dy;
+        thumbOffset += details.delta.dy;
         thumbOffset = thumbOffset.clamp(thumbMin, thumbMax);
         double position = thumbOffset / (thumbMax - thumbMin);
         widget.onChange?.call(position);
-      }
-      else if (isDragging && details.delta.dx != 0 && widget.scrollDirection == Axis.horizontal) {
+      } else if (isDragging && details.delta.dx != 0 && widget.scrollDirection == Axis.horizontal) {
         thumbOffset += details.delta.dx;
         thumbOffset = thumbOffset.clamp(thumbMin, thumbMax);
         double position = thumbOffset / (thumbMax - thumbMin);
@@ -130,12 +116,12 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
 
   void keyHandler(RawKeyEvent value) {
     if (value.runtimeType == RawKeyDownEvent) {
-      if (value.logicalKey == LogicalKeyboardKey.arrowDown)
+      if (widget.scrollDirection == Axis.vertical && value.logicalKey == LogicalKeyboardKey.arrowDown)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
           delta: Offset(0, 2),
         ));
-      else if (value.logicalKey == LogicalKeyboardKey.arrowUp)
+      else if (widget.scrollDirection == Axis.vertical && value.logicalKey == LogicalKeyboardKey.arrowUp)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
           delta: Offset(0, -2),
@@ -153,12 +139,12 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
       else if (value.logicalKey == LogicalKeyboardKey.pageDown)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: widget.scrollDirection == Axis.horizontal ? Offset(25,0):Offset(0, 25),
+          delta: widget.scrollDirection == Axis.horizontal ? Offset(25, 0) : Offset(0, 25),
         ));
       else if (value.logicalKey == LogicalKeyboardKey.pageUp)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: widget.scrollDirection == Axis.horizontal ? Offset(-25, 0):Offset(0, -25),
+          delta: widget.scrollDirection == Axis.horizontal ? Offset(-25, 0) : Offset(0, -25),
         ));
     }
   }
