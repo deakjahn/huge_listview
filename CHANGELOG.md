@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.2] - 2021-06-04
+
+* PR #4 (https://github.com/deakjahn/huge_listview/pull/4).
+
 ## [2.0.1] - 2021-04-20
 
 * PR #3 (https://github.com/deakjahn/huge_listview/pull/3).
