@@ -69,6 +69,7 @@ class HugeListView<T> extends StatefulWidget {
   /// Defaults to [Axis.vertical].
   final Axis scrollDirection;
 
+  /// The amount of space by which to inset the list.
   final EdgeInsets? padding;
 
   HugeListView({

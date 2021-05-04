@@ -64,6 +64,10 @@ HugeListView<MyDataItem>(
   /// Event to call with the index of the topmost visible item in the viewport while scrolling.
   /// Can be used eg. to display the current letter of an alphabetically sorted list.
   firstShown: (index) {},
+  /// The axis along which the list view scrolls. Defaults to [Axis.vertical].
+  scrollDirection: Axis.vertical,
+  /// The amount of space by which to inset the list.
+  padding: EdgeInsets.all(6.0),
 );
 ```
 
