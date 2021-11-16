@@ -72,7 +72,7 @@ class HugeListView<T> extends StatefulWidget {
   /// The amount of space by which to inset the list.
   final EdgeInsets? padding;
 
-  HugeListView({
+  const HugeListView({
     Key? key,
     this.controller,
     required this.pageSize,
@@ -184,7 +184,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
                 SchedulerBinding.instance?.scheduleFrameCallback((d) => _deferredReload(context));
               }
               return ConstrainedBox(
-                constraints: BoxConstraints(minHeight: 10),
+                constraints: const BoxConstraints(minHeight: 10),
                 child: widget.placeholderBuilder(context, index),
               );
             },
@@ -232,7 +232,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
 class _MaxVelocityPhysics extends AlwaysScrollableScrollPhysics {
   final double velocityThreshold;
 
-  _MaxVelocityPhysics({required this.velocityThreshold, ScrollPhysics? parent}) : super(parent: parent);
+  const _MaxVelocityPhysics({required this.velocityThreshold, ScrollPhysics? parent}) : super(parent: parent);
 
   @override
   bool recommendDeferredLoading(double velocity, ScrollMetrics metrics, BuildContext context) {

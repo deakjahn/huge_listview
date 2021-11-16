@@ -16,7 +16,7 @@ class DraggableScrollbar extends StatefulWidget {
   final ScrollThumbBuilder scrollThumbBuilder;
   final Axis scrollDirection;
 
-  DraggableScrollbar({
+  const DraggableScrollbar({
     Key? key,
     required this.child,
     this.backgroundColor = Colors.white,
@@ -132,32 +132,32 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
       if (widget.scrollDirection == Axis.vertical && value.logicalKey == LogicalKeyboardKey.arrowDown)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: Offset(0, 2),
+          delta: const Offset(0, 2),
         ));
       else if (widget.scrollDirection == Axis.vertical && value.logicalKey == LogicalKeyboardKey.arrowUp)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: Offset(0, -2),
+          delta: const Offset(0, -2),
         ));
       else if (widget.scrollDirection == Axis.horizontal && value.logicalKey == LogicalKeyboardKey.arrowRight)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: Offset(2, 0),
+          delta: const Offset(2, 0),
         ));
       else if (widget.scrollDirection == Axis.horizontal && value.logicalKey == LogicalKeyboardKey.arrowLeft)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: Offset(-2, 0),
+          delta: const Offset(-2, 0),
         ));
       else if (value.logicalKey == LogicalKeyboardKey.pageDown)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: widget.scrollDirection == Axis.horizontal ? Offset(25, 0) : Offset(0, 25),
+          delta: widget.scrollDirection == Axis.horizontal ? const Offset(25, 0) : const Offset(0, 25),
         ));
       else if (value.logicalKey == LogicalKeyboardKey.pageUp)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: widget.scrollDirection == Axis.horizontal ? Offset(-25, 0) : Offset(0, -25),
+          delta: widget.scrollDirection == Axis.horizontal ? const Offset(-25, 0) : const Offset(0, -25),
         ));
     }
   }

@@ -7,7 +7,7 @@ class DraggableScrollbarThumbs {
     return Material(
       elevation: 4.0,
       color: backgroundColor,
-      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+      borderRadius: const BorderRadius.all(Radius.circular(7.0)),
       child: Container(
         constraints: BoxConstraints.tight(Size(16.0, height)),
       ),
@@ -22,7 +22,7 @@ class DraggableScrollbarThumbs {
         height: height,
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(12.0)),
         ),
       ),
     );
@@ -37,8 +37,8 @@ class DraggableScrollbarThumbs {
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(height),
           bottomLeft: Radius.circular(height),
-          topRight: Radius.circular(4.0),
-          bottomRight: Radius.circular(4.0),
+          topRight: const Radius.circular(4.0),
+          bottomRight: const Radius.circular(4.0),
         ),
         child: Container(constraints: BoxConstraints.tight(Size(height * 0.6, height))),
       ),
