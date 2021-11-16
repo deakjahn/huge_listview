@@ -22,7 +22,7 @@ The scrollbar is based on:
 
 ## Usage
 
-``` dart
+```dart
 static const int PAGE_SIZE = 12;
 final listKey = GlobalKey<HugeListViewState>();
 final scroll = ItemScrollController();
