@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.3] - 2022-05-15
+
+* Upgrade dependent package versions
+
 ## [2.0.2] - 2021-06-04
 
 * PR #4 (https://github.com/deakjahn/huge_listview/pull/4).

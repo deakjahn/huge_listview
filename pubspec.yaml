@@ -1,6 +1,6 @@
 name: huge_listview
 description: A performant list with any number of items.
-version: 2.0.2
+version: 2.0.3
 homepage: https://github.com/deakjahn/huge_listview
 
 environment:
@@ -11,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  quiver: ^3.0.0
-  scrollable_positioned_list: ^0.2.0-nullsafety.0
+  quiver: ^3.1.0
+  scrollable_positioned_list: ^0.3.2
 
 dev_dependencies:
   flutter_test:
