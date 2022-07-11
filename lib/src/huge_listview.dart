@@ -181,7 +181,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
                     .catchError(_error);
               } else if (!_frameCallbackInProgress) {
                 _frameCallbackInProgress = true;
-                SchedulerBinding.instance?.scheduleFrameCallback((d) => _deferredReload(context));
+                SchedulerBinding.instance.scheduleFrameCallback((d) => _deferredReload(context));
               }
               return ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: 10),
@@ -215,7 +215,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
       _frameCallbackInProgress = false;
       _doReload(-1);
     } else
-      SchedulerBinding.instance?.scheduleFrameCallback((d) => _deferredReload(context), rescheduling: true);
+      SchedulerBinding.instance.scheduleFrameCallback((d) => _deferredReload(context), rescheduling: true);
   }
 
   void _doReload(int index) {

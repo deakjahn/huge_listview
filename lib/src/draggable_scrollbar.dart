@@ -52,7 +52,7 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
 
     currentFirstIndex = widget.currentFirstIndex;
     if (widget.initialScrollIndex > 0 && widget.totalCount > 1) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() => thumbOffset = (widget.initialScrollIndex / widget.totalCount) * (thumbMax - thumbMin));
       });
     }
