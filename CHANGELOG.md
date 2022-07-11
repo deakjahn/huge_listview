@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.4] - 2022-07-11
+
+* Flutter 3.0 changes
+
 ## [2.0.3] - 2022-05-15
 
 * Upgrade dependent package versions
