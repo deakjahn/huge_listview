@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:huge_listview/src/slidefade_transition.dart';
 
-typedef ScrollThumbBuilder = Widget Function(Color backgroundColor, Color drawColor, double height, int index);
+typedef ScrollThumbBuilder = Widget Function(Color backgroundColor, Color drawColor, double height, bool alwaysVisibleScrollThumb, Animation<double> thumbAnimation, int index);
 
 class DraggableScrollbarThumbs {
-  static Widget RoundedRectThumb(Color backgroundColor, Color drawColor, double height, int index) {
-    return Material(
+  static Widget RoundedRectThumb(
+    Color backgroundColor,
+    Color drawColor,
+    double height,
+    bool alwaysVisibleScrollThumb,
+    Animation<double> thumbAnimation,
+    int index,
+  ) {
+    final thumb = Material(
       elevation: 4.0,
       color: backgroundColor,
       borderRadius: const BorderRadius.all(Radius.circular(7.0)),
@@ -12,10 +20,18 @@ class DraggableScrollbarThumbs {
         constraints: BoxConstraints.tight(Size(16.0, height)),
       ),
     );
+    return alwaysVisibleScrollThumb ? thumb : SlideFadeTransition(animation: thumbAnimation, child: thumb);
   }
 
-  static Widget ArrowThumb(Color backgroundColor, Color drawColor, double height, int index) {
-    return ClipPath(
+  static Widget ArrowThumb(
+    Color backgroundColor,
+    Color drawColor,
+    double height,
+    bool alwaysVisibleScrollThumb,
+    Animation<double> thumbAnimation,
+    int index,
+  ) {
+    final thumb = ClipPath(
       clipper: _ArrowClipper(),
       child: Container(
         width: 20.0,
@@ -26,10 +42,18 @@ class DraggableScrollbarThumbs {
         ),
       ),
     );
+    return alwaysVisibleScrollThumb ? thumb : SlideFadeTransition(animation: thumbAnimation, child: thumb);
   }
 
-  static Widget SemicircleThumb(Color backgroundColor, Color drawColor, double height, int index) {
-    return CustomPaint(
+  static Widget SemicircleThumb(
+    Color backgroundColor,
+    Color drawColor,
+    double height,
+    bool alwaysVisibleScrollThumb,
+    Animation<double> thumbAnimation,
+    int index,
+  ) {
+    final thumb = CustomPaint(
       foregroundPainter: _ArrowCustomPainter(drawColor),
       child: Material(
         elevation: 4.0,
@@ -43,6 +67,7 @@ class DraggableScrollbarThumbs {
         child: Container(constraints: BoxConstraints.tight(Size(height * 0.6, height))),
       ),
     );
+    return alwaysVisibleScrollThumb ? thumb : SlideFadeTransition(animation: thumbAnimation, child: thumb);
   }
 }
 

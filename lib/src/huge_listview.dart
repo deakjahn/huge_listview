@@ -72,6 +72,15 @@ class HugeListView<T> extends StatefulWidget {
   /// The amount of space by which to inset the list.
   final EdgeInsets? padding;
 
+  /// Whether the scroll thumb slides out when not used, defaults to always visible.
+  final bool alwaysVisibleThumb;
+
+  /// How quickly the scroll thumb animates in and out. Ignored if `alwaysVisibleThumb` is true.
+  final Duration thumbAnimationDuration;
+
+  /// How long the scroll thumb stays visible before disappearing. Ignored if `alwaysVisibleThumb` is true.
+  final Duration thumbVisibleDuration;
+
   const HugeListView({
     Key? key,
     this.controller,
@@ -91,6 +100,9 @@ class HugeListView<T> extends StatefulWidget {
     this.thumbBackgroundColor = Colors.white,
     this.thumbDrawColor = Colors.grey,
     this.thumbHeight = 48.0,
+    this.alwaysVisibleThumb = true,
+    this.thumbAnimationDuration = kThemeAnimationDuration,
+    this.thumbVisibleDuration = const Duration(milliseconds: 1000),
     this.padding
   })  : assert(pageSize > 0),
         assert(velocityThreshold >= 0),
@@ -158,6 +170,9 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
           drawColor: widget.thumbDrawColor,
           heightScrollThumb: widget.thumbHeight,
           currentFirstIndex: _currentFirst(),
+          alwaysVisibleThumb: widget.alwaysVisibleThumb,
+          thumbAnimationDuration: widget.thumbAnimationDuration,
+          thumbVisibleDuration: widget.thumbVisibleDuration,
           child: ScrollablePositionedList.builder(
             padding: widget.padding,
             itemScrollController: widget.controller,

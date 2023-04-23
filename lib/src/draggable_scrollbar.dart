@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +11,9 @@ class DraggableScrollbar extends StatefulWidget {
   final Color drawColor;
   final double heightScrollThumb;
   final EdgeInsetsGeometry? padding;
+  final bool alwaysVisibleThumb;
+  final Duration thumbAnimationDuration;
+  final Duration thumbVisibleDuration;
   final int totalCount;
   final int initialScrollIndex;
   final int currentFirstIndex;
@@ -23,6 +28,9 @@ class DraggableScrollbar extends StatefulWidget {
     this.drawColor = Colors.grey,
     this.heightScrollThumb = 48.0,
     this.padding,
+    this.alwaysVisibleThumb = true,
+    this.thumbAnimationDuration = kThemeAnimationDuration,
+    this.thumbVisibleDuration = const Duration(milliseconds: 1000),
     this.totalCount = 1,
     this.initialScrollIndex = 0,
     this.currentFirstIndex = 0,
@@ -39,6 +47,9 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
   double thumbOffset = 0.0;
   int currentFirstIndex = 0;
   bool isDragging = false;
+  late AnimationController thumbAnimationController;
+  late Animation<double> thumbAnimation;
+  Timer? fadeoutTimer;
 
   double get thumbMin => 0.0;
 
@@ -50,6 +61,16 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
   void initState() {
     super.initState();
 
+    thumbAnimationController = AnimationController(
+      vsync: this,
+      duration: widget.thumbAnimationDuration,
+    );
+
+    thumbAnimation = CurvedAnimation(
+      parent: thumbAnimationController,
+      curve: Curves.fastOutSlowIn,
+    );
+
     currentFirstIndex = widget.currentFirstIndex;
     if (widget.initialScrollIndex > 0 && widget.totalCount > 1) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -59,11 +80,31 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
-        children: [
-          RepaintBoundary(child: widget.child),
-          RepaintBoundary(child: buildDetector()),
-        ],
+  void dispose() {
+    thumbAnimationController.dispose();
+    fadeoutTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (!isDragging && (notification is ScrollUpdateNotification || notification is OverscrollNotification)) {
+            if (thumbAnimationController.status != AnimationStatus.forward) thumbAnimationController.forward();
+            fadeoutTimer?.cancel();
+            fadeoutTimer = Timer(widget.thumbVisibleDuration, () {
+              thumbAnimationController.reverse();
+              fadeoutTimer = null;
+            });
+          }
+          return false;
+        },
+        child: Stack(
+          children: [
+            RepaintBoundary(child: widget.child),
+            RepaintBoundary(child: buildDetector()),
+          ],
+        ),
       );
 
   Widget buildKeyboard() {
@@ -92,7 +133,14 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
               ? EdgeInsets.only(top: thumbOffset)
               : EdgeInsets.only(left: thumbOffset),
           padding: widget.padding,
-          child: widget.scrollThumbBuilder.call(widget.backgroundColor, widget.drawColor, widget.heightScrollThumb, currentFirstIndex),
+          child: widget.scrollThumbBuilder.call(
+            widget.backgroundColor,
+            widget.drawColor,
+            widget.heightScrollThumb,
+            widget.alwaysVisibleThumb,
+            thumbAnimation,
+            currentFirstIndex,
+          ),
         ),
       );
 
@@ -104,11 +152,15 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
   }
 
   void onDragStart(DragStartDetails details) {
-    setState(() => isDragging = true);
+    setState(() {
+      isDragging = true;
+      fadeoutTimer?.cancel();
+    });
   }
 
   void onDragUpdate(DragUpdateDetails details) {
     setState(() {
+      if (thumbAnimationController.status != AnimationStatus.forward) thumbAnimationController.forward();
       if (isDragging && details.delta.dy != 0 && widget.scrollDirection == Axis.vertical) {
         thumbOffset += details.delta.dy;
         thumbOffset = thumbOffset.clamp(thumbMin, thumbMax);
@@ -124,6 +176,10 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
   }
 
   void onDragEnd(DragEndDetails details) {
+    fadeoutTimer = Timer(widget.thumbVisibleDuration, () {
+      thumbAnimationController.reverse();
+      fadeoutTimer = null;
+    });
     setState(() => isDragging = false);
   }
 

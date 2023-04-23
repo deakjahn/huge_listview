@@ -34,7 +34,7 @@ final scroll = ItemScrollController();
 HugeListView<MyDataItem>(
   /// Only needed if you expect to make use of its [setPosition] function.
   key: listKey,
-  /// Only needed if you expect to make use of its [jumpTo] or [scrollTo] functions.
+  /// Only needed if you expect to make use of its [jumpTo] or [scrollTo] functions (the thumb expects it, though).
   controller: scroll,
   /// Size of the page. [HugeListView] only keeps a few pages of items in memory any time.
   pageSize: PAGE_SIZE,
@@ -72,6 +72,14 @@ HugeListView<MyDataItem>(
   scrollDirection: Axis.vertical,
   /// The amount of space by which to inset the list.
   padding: EdgeInsets.all(6.0),
+  /// Whether the scroll thumb slides out when not used, defaults to always visible.
+  alwaysVisibleThumb: false,
+  /// How quickly the scroll thumb animates in and out. Ignored if `alwaysVisibleThumb` is true.
+  /// Defaults to kThemeAnimationDuration.
+  thumbAnimationDuration = const Duration(milliseconds: 300),
+  /// How long the scroll thumb stays visible before disappearing. Ignored if `alwaysVisibleThumb` is true.
+  /// Defaults to 1 second.
+  thumbVisibleDuration = const Duration(milliseconds: 600),
 );
 ```
 

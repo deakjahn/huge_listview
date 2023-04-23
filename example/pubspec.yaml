@@ -1,0 +1,26 @@
+name: huge_listview_example
+description: Demonstrates how to use the huge_listview plugin.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  huge_listview: ^2.0.4
+  flutter_lints: ^2.0.0
+
+dev_dependency_overrides:
+  huge_listview:
+    path: ../
+
+flutter:
+  uses-material-design: true
