@@ -134,8 +134,8 @@ Widget buildWait() {
 In order to use a custom thumb, provide a builder:
 
 ``` dart
-thumbBuilder: (Color backgroundColor, Color drawColor, double height, int index) {
-  return ScrollBarThumb(backgroundColor, drawColor, height, index.toString());
+thumbBuilder: (Color backgroundColor, Color drawColor, double height, int index, bool alwaysVisibleScrollThumb, Animation<double> thumbAnimation) {
+  return ScrollBarThumb(backgroundColor, drawColor, height, index.toString(), alwaysVisibleScrollThumb, thumbAnimation);
 }
 ```
 
@@ -143,22 +143,26 @@ where `ScrollBarThumb` can be:
 
 ```dart
 class ScrollBarThumb extends StatelessWidget {
-  final backgroundColor;
-  final drawColor;
-  final height;
-  final title;
+  final Color backgroundColor;
+  final Color drawColor;
+  final double height;
+  final String title;
+  final bool alwaysVisibleScrollThumb;
+  final Animation<double> thumbAnimation;
 
   const ScrollBarThumb(
     this.backgroundColor,
     this.drawColor,
     this.height,
-    this.title, {
+    this.title,
+    this.alwaysVisibleScrollThumb,
+    this.thumbAnimation, {
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final thumb = Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
@@ -195,6 +199,7 @@ class ScrollBarThumb extends StatelessWidget {
         ),
       ],
     );
+    return alwaysVisibleScrollThumb ? thumb : SlideFadeTransition(animation: thumbAnimation, child: thumb);
   }
 }
 

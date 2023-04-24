@@ -137,9 +137,9 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
             widget.backgroundColor,
             widget.drawColor,
             widget.heightScrollThumb,
+            currentFirstIndex,
             widget.alwaysVisibleThumb,
             thumbAnimation,
-            currentFirstIndex,
           ),
         ),
       );

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:huge_listview/src/slidefade_transition.dart';
 
-typedef ScrollThumbBuilder = Widget Function(Color backgroundColor, Color drawColor, double height, bool alwaysVisibleScrollThumb, Animation<double> thumbAnimation, int index);
+typedef ScrollThumbBuilder = Widget Function(Color backgroundColor, Color drawColor, double height, int index, bool alwaysVisibleScrollThumb, Animation<double> thumbAnimation);
 
 class DraggableScrollbarThumbs {
   static Widget RoundedRectThumb(
     Color backgroundColor,
     Color drawColor,
     double height,
+    int index,
     bool alwaysVisibleScrollThumb,
     Animation<double> thumbAnimation,
-    int index,
   ) {
     final thumb = Material(
       elevation: 4.0,
@@ -27,9 +27,9 @@ class DraggableScrollbarThumbs {
     Color backgroundColor,
     Color drawColor,
     double height,
+    int index,
     bool alwaysVisibleScrollThumb,
     Animation<double> thumbAnimation,
-    int index,
   ) {
     final thumb = ClipPath(
       clipper: _ArrowClipper(),
@@ -49,9 +49,9 @@ class DraggableScrollbarThumbs {
     Color backgroundColor,
     Color drawColor,
     double height,
+    int index,
     bool alwaysVisibleScrollThumb,
     Animation<double> thumbAnimation,
-    int index,
   ) {
     final thumb = CustomPaint(
       foregroundPainter: _ArrowCustomPainter(drawColor),
