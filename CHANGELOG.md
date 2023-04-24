@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.5] - 2023-04-24
+
+* added auto-hide scrollbar. Implement #9 (https://github.com/deakjahn/huge_listview/issues/9).
+
 ## [2.0.4] - 2022-07-11
 
 * Flutter 3.0 changes
