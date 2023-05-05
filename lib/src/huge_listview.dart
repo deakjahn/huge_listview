@@ -52,7 +52,11 @@ class HugeListView<T> extends StatefulWidget {
   final WidgetBuilder? waitBuilder;
 
   /// Called to build a widget when the list is empty.
+  @Deprecated('Use `emptyBuilder`instead.')
   final WidgetBuilder? emptyResultBuilder;
+
+  /// Called to build a widget when the list is empty.
+  final WidgetBuilder? emptyBuilder;
 
   /// Called to build a widget when there is an error.
   final HugeListViewErrorBuilder? errorBuilder;
@@ -93,6 +97,7 @@ class HugeListView<T> extends StatefulWidget {
     required this.placeholderBuilder,
     this.waitBuilder,
     this.emptyResultBuilder,
+    this.emptyBuilder,
     this.errorBuilder,
     this.velocityThreshold = 128,
     this.firstShown,
@@ -153,6 +158,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   Widget build(BuildContext context) {
     if (error != null && widget.errorBuilder != null) return widget.errorBuilder!(context, error);
     if (widget.totalCount == -1 && widget.waitBuilder != null) return widget.waitBuilder!(context);
+    if (widget.totalCount == 0 && widget.emptyBuilder != null) return widget.emptyBuilder!(context);
     if (widget.totalCount == 0 && widget.emptyResultBuilder != null) return widget.emptyResultBuilder!(context);
 
     return LayoutBuilder(

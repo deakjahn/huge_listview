@@ -1,8 +1,12 @@
 # Changelog
 
+## [2.0.7] - coming
+
+* Deprecate `emptyResultBuilder`
+
 ## [2.0.6] - 2023-04-24
 
-* Document `thumbBuilder` change.
+* Document `thumbBuilder` change
 
 ## [2.0.5] - 2023-04-24
 

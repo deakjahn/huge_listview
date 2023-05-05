@@ -62,7 +62,7 @@ HugeListView<MyDataItem>(
   /// Called to build a progress widget while the whole list is initialized.
   waitBuilder: (context) => <some Widget>,
   /// Called to build a widget when the list is empty.
-  emptyResultBuilder: (context) => <some Widget>,
+  emptyBuilder: (context) => <some Widget>,
   /// Called to build a widget when there is an error.
   errorBuilder: (context, error) => <some Widget>,
   /// Event to call with the index of the topmost visible item in the viewport while scrolling.
