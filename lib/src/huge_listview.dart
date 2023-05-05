@@ -163,6 +163,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
     if (error != null && widget.errorBuilder != null) return widget.errorBuilder!(context, error);
     if (widget.totalCount == -1 && widget.waitBuilder != null) return widget.waitBuilder!(context);
     if (widget.totalCount == 0 && widget.emptyBuilder != null) return widget.emptyBuilder!(context);
+    // ignore: deprecated_member_use_from_same_package
     if (widget.totalCount == 0 && widget.emptyResultBuilder != null) return widget.emptyResultBuilder!(context);
 
     return LayoutBuilder(
