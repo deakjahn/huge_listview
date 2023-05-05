@@ -81,6 +81,9 @@ class HugeListView<T> extends StatefulWidget {
   /// How long the scroll thumb stays visible before disappearing. Ignored if `alwaysVisibleThumb` is true.
   final Duration thumbVisibleDuration;
 
+  /// The optional predefined LruMap to be used for cache, convenient for using LruMap outside HugeListView.
+  final LruMap<int, HugeListViewPageResult<T>>? lruMap;
+
   const HugeListView({
     Key? key,
     this.controller,
@@ -103,7 +106,8 @@ class HugeListView<T> extends StatefulWidget {
     this.alwaysVisibleThumb = true,
     this.thumbAnimationDuration = kThemeAnimationDuration,
     this.thumbVisibleDuration = const Duration(milliseconds: 1000),
-    this.padding
+    this.padding,
+    this.lruMap
   })  : assert(pageSize > 0),
         assert(velocityThreshold >= 0),
         super(key: key);
@@ -214,7 +218,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   }
 
   void _initCache() {
-    map = LruMap<int, HugeListViewPageResult<T>>(maximumSize: 256 ~/ widget.pageSize);
+    map = widget.lruMap ?? LruMap<int, HugeListViewPageResult<T>>(maximumSize: 256 ~/ widget.pageSize);
     cache = MapCache<int, HugeListViewPageResult<T>>(map: map);
   }
 
