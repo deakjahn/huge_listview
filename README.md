@@ -80,6 +80,8 @@ HugeListView<MyDataItem>(
   /// How long the scroll thumb stays visible before disappearing. Ignored if `alwaysVisibleThumb` is true.
   /// Defaults to 1 second.
   thumbVisibleDuration = const Duration(milliseconds: 600),
+  /// Optional external LruMap to be used for cache.
+  final LruMap<int, HugeListViewPageResult<T>>? lruMap;
 );
 ```
 

@@ -1,8 +1,9 @@
 # Changelog
 
-## [2.0.7] - coming
+## [2.0.7] - 2023-05-05
 
 * Deprecate `emptyResultBuilder`
+* Added external cache. Implement #10 (https://github.com/deakjahn/huge_listview/issues/10).
 
 ## [2.0.6] - 2023-04-24
 
