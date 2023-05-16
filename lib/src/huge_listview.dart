@@ -195,9 +195,13 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
             itemBuilder: (context, index) {
               final page = index ~/ widget.pageSize;
               final pageResult = map[page];
-              final value = pageResult?.items.elementAt(index % widget.pageSize);
-              if (value != null) {
-                return widget.itemBuilder(context, index, value);
+              final valueIndex = index % widget.pageSize;
+              if (pageResult != null && pageResult.items.length > valueIndex) {
+                final value = pageResult.items.elementAt(
+                    valueIndex);
+                if (value != null) {
+                  return widget.itemBuilder(context, index, value);
+                }
               }
 
               if (!Scrollable.recommendDeferredLoadingForContext(context)) {
