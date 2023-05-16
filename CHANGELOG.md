@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.8] - 2023-05-16
+
+* Implement #11 (https://github.com/deakjahn/huge_listview/pull/11).
+
 ## [2.0.7] - 2023-05-05
 
 * Deprecate `emptyResultBuilder`
