@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.9] - 2023-05-17
+
+* Revert to previous Flutter version.
+
 ## [2.0.8] - 2023-05-17
 
 * Flutter support back to 3.0. Fix #12 (https://github.com/deakjahn/huge_listview/issues/12).
