@@ -1,11 +1,11 @@
 name: huge_listview
 description: A performant list with any number of items.
-version: 2.0.8
+version: 2.0.9
 homepage: https://github.com/deakjahn/huge_listview
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
