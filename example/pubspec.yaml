@@ -19,7 +19,7 @@ dev_dependencies:
   huge_listview: ^2.0.8
   flutter_lints: ^2.0.1
 
-dev_dependency_overrides:
+dependency_overrides:
   huge_listview:
     path: ../
 

@@ -33,33 +33,54 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static const int PAGE_SIZE = 10;
   final scroll = ItemScrollController();
+  late List<String> list;
+  late HugeListViewController controller = HugeListViewController();
+
+  @override
+  void initState() {
+    list = List.generate(10000, (index) => 'Item #$index');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: HugeListView<String>(
-        controller: scroll,
-        pageSize: PAGE_SIZE,
-        totalCount: 999999,
-        startIndex: 0,
-        pageFuture: (page) => _loadPage(page, PAGE_SIZE),
-        itemBuilder: (context, index, String entry) {
-          return Text(entry);
-        },
-        thumbBuilder: DraggableScrollbarThumbs.SemicircleThumb,
-        placeholderBuilder: (context, index) => buildPlaceholder(),
-        alwaysVisibleThumb: false,
-      ),
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: HugeListView<String>(
+          controller: scroll,
+          pageSize: PAGE_SIZE,
+          totalCount: 9999,
+          startIndex: 0,
+          pageFuture: (page) => _loadPage(page, PAGE_SIZE),
+          itemBuilder: (context, index, String entry) {
+            return SizedBox(
+              height: 100,
+              child: Text(entry),
+            );
+          },
+          thumbBuilder: DraggableScrollbarThumbs.SemicircleThumb,
+          placeholderBuilder: (context, index) => buildPlaceholder(),
+          alwaysVisibleThumb: false,
+          listViewController: controller,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              list = List.generate(10000, (index) => 'New Item #$index');
+            });
+            controller.invalidateList(true);
+          },
+          tooltip: 'Update list',
+          child: const Icon(Icons.refresh),
+        ));
   }
 
   Future<List<String>> _loadPage(int page, int pageSize) async {
     int from = page * pageSize;
-    int to = min(999999, from + pageSize);
-    return List.generate(to - from, (index) => 'Item #${from + index}');
+    int to = min(9999, from + pageSize);
+    return list.sublist(from, to);
   }
 
   Widget buildPlaceholder() {
