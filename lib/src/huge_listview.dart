@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:huge_listview/src/draggable_scrollbar.dart';
 import 'package:huge_listview/src/draggable_scrollbar_thumbs.dart';
+import 'package:huge_listview/src/huge_listview_controller.dart';
 import 'package:huge_listview/src/page_result.dart';
 import 'package:quiver/cache.dart';
 import 'package:quiver/collection.dart';
@@ -88,6 +89,8 @@ class HugeListView<T> extends StatefulWidget {
   /// The optional predefined LruMap to be used for cache, convenient for using LruMap outside HugeListView.
   final LruMap<int, HugeListViewPageResult<T>>? lruMap;
 
+  final HugeListViewController? listViewController;
+
   const HugeListView({
     Key? key,
     this.controller,
@@ -112,7 +115,8 @@ class HugeListView<T> extends StatefulWidget {
     this.thumbAnimationDuration = kThemeAnimationDuration,
     this.thumbVisibleDuration = const Duration(milliseconds: 1000),
     this.padding,
-    this.lruMap
+    this.lruMap,
+    this.listViewController,
   })  : assert(pageSize > 0),
         assert(velocityThreshold >= 0),
         super(key: key);
@@ -126,6 +130,8 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   final listener = ItemPositionsListener.create();
   late final Map<int, HugeListViewPageResult<T>> map;
   late final MapCache<int, HugeListViewPageResult<T>?> cache;
+  late final ValueNotifier<int> _totalItemCount;
+
   dynamic error;
   bool _frameCallbackInProgress = false;
 
@@ -134,6 +140,19 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
     super.initState();
 
     _initCache();
+    _totalItemCount = ValueNotifier(widget.totalCount);
+    widget.listViewController?.onReload = () => _doReload(0);
+    widget.listViewController?.onInvalidateList = (bool reloadPage) {
+      _invalidateCache();
+      if (reloadPage) {
+        _doReload(0);
+      }
+    };
+
+    widget.listViewController?.setTotalItemCount = (int count) {
+      _totalItemCount.value = count;
+    };
+
     listener.itemPositions.addListener(_sendScroll);
   }
 
@@ -152,8 +171,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   int _currentFirst() {
     try {
       return listener.itemPositions.value.first.index;
-    }
-    catch (e) {
+    } catch (e) {
       return 0;
     }
   }
@@ -168,22 +186,28 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return DraggableScrollbar(
-          key: scrollKey,
-          totalCount: widget.totalCount,
-          initialScrollIndex: widget.startIndex,
-          scrollDirection: widget.scrollDirection,
-          onChange: (position) {
-            widget.controller?.jumpTo(index: (position * widget.totalCount).floor());
+        return ValueListenableBuilder<int>(
+          valueListenable: _totalItemCount,
+          builder: (context, value, child) {
+            return DraggableScrollbar(
+              key: scrollKey,
+              totalCount: widget.totalCount,
+              initialScrollIndex: widget.startIndex,
+              scrollDirection: widget.scrollDirection,
+              onChange: (position) {
+                widget.controller?.jumpTo(index: (position * widget.totalCount).floor());
+              },
+              scrollThumbBuilder: widget.thumbBuilder,
+              backgroundColor: widget.thumbBackgroundColor,
+              drawColor: widget.thumbDrawColor,
+              heightScrollThumb: widget.thumbHeight,
+              currentFirstIndex: _currentFirst(),
+              alwaysVisibleThumb: widget.alwaysVisibleThumb,
+              thumbAnimationDuration: widget.thumbAnimationDuration,
+              thumbVisibleDuration: widget.thumbVisibleDuration,
+              child: child!,
+            );
           },
-          scrollThumbBuilder: widget.thumbBuilder,
-          backgroundColor: widget.thumbBackgroundColor,
-          drawColor: widget.thumbDrawColor,
-          heightScrollThumb: widget.thumbHeight,
-          currentFirstIndex: _currentFirst(),
-          alwaysVisibleThumb: widget.alwaysVisibleThumb,
-          thumbAnimationDuration: widget.thumbAnimationDuration,
-          thumbVisibleDuration: widget.thumbVisibleDuration,
           child: ScrollablePositionedList.builder(
             padding: widget.padding,
             itemScrollController: widget.controller,
@@ -197,8 +221,7 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
               final pageResult = map[page];
               final valueIndex = index % widget.pageSize;
               if (pageResult != null && pageResult.items.length > valueIndex) {
-                final value = pageResult.items.elementAt(
-                    valueIndex);
+                final value = pageResult.items.elementAt(valueIndex);
                 if (value != null) {
                   return widget.itemBuilder(context, index, value);
                 }
@@ -256,6 +279,13 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   /// To jump to a specific item, use [ItemScrollController.jumpTo] or [ItemScrollController.scrollTo].
   void setPosition(double position) {
     scrollKey.currentState?.setPosition(position, _currentFirst());
+  }
+
+  void _invalidateCache() {
+    final keys = map.keys;
+    for (final key in keys) {
+      cache.invalidate(key);
+    }
   }
 }
 

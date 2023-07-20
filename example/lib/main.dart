@@ -31,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const int PAGE_SIZE = 24;
+  static const int PAGE_SIZE = 10;
   final scroll = ItemScrollController();
 
   @override
