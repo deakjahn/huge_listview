@@ -1,6 +1,6 @@
 name: huge_listview
 description: A performant list with any number of items.
-version: 2.0.11
+version: 2.0.10
 homepage: https://github.com/deakjahn/huge_listview
 
 environment:
