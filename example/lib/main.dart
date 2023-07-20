@@ -35,10 +35,11 @@ class _MyHomePageState extends State<MyHomePage> {
   final scroll = ItemScrollController();
   late List<String> list;
   late HugeListViewController controller = HugeListViewController();
+  int totalItemCount = 10000;
 
   @override
   void initState() {
-    list = List.generate(10000, (index) => 'Item #$index');
+    list = List.generate(totalItemCount + 1, (index) => 'Item #$index');
     super.initState();
   }
 
@@ -51,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: HugeListView<String>(
           controller: scroll,
           pageSize: PAGE_SIZE,
-          totalCount: 9999,
+          totalCount: totalItemCount,
           startIndex: 0,
           pageFuture: (page) => _loadPage(page, PAGE_SIZE),
           itemBuilder: (context, index, String entry) {
@@ -68,9 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             setState(() {
-              list = List.generate(10000, (index) => 'New Item #$index');
+              totalItemCount = Random().nextInt(10000) + 10000;
+              list = List.generate(totalItemCount + 1, (index) => 'New Item #$index');
             });
             controller.invalidateList(true);
+            controller.totalItemCount = totalItemCount;
           },
           tooltip: 'Update list',
           child: const Icon(Icons.refresh),
@@ -79,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<String>> _loadPage(int page, int pageSize) async {
     int from = page * pageSize;
-    int to = min(9999, from + pageSize);
+    int to = min(totalItemCount, from + pageSize);
     return list.sublist(from, to);
   }
 
