@@ -43,7 +43,7 @@ HugeListView<MyDataItem>(
   pageSize: PAGE_SIZE,
   /// Index of an item to initially align within the viewport.
   startIndex: 0,
-  /// Called to build items for the list with the specified [pageIndex].
+  /// Called to load items for the list with the specified [pageIndex].
   pageFuture: (page) => _loadPage(page, PAGE_SIZE),
   /// Called to build an individual item with the specified [index].
   itemBuilder: (context, index, MyDataItem entry) {
