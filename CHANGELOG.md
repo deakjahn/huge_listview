@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.0.11] - coming
+
+* Controller, reloading the list (see https://github.com/deakjahn/huge_listview/issues/7 and https://github.com/deakjahn/huge_listview/pull/13).
+* Deprecate `controller`, `totalCount`
+
 ## [2.0.10] - 2023-05-17
 
 * Revert to previous Flutter version.

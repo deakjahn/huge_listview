@@ -30,16 +30,17 @@ The scrollbar is based on:
 static const int PAGE_SIZE = 12;
 final listKey = GlobalKey<HugeListViewState>();
 final scroll = ItemScrollController();
+final controller = HugeListViewController(totalItemCount: 999999);
 
 HugeListView<MyDataItem>(
   /// Only needed if you expect to make use of its [setPosition] function.
   key: listKey,
   /// Only needed if you expect to make use of its [jumpTo] or [scrollTo] functions (the thumb expects it, though).
-  controller: scroll,
+  scrollController: scroll,
+  /// Only needed if you expect to make use of its... FIXME: probably ends up required
+  listViewController: controller,
   /// Size of the page. [HugeListView] only keeps a few pages of items in memory any time.
   pageSize: PAGE_SIZE,
-  /// Total number of items in the list.
-  totalCount: 999999,
   /// Index of an item to initially align within the viewport.
   startIndex: 0,
   /// Called to build items for the list with the specified [pageIndex].

@@ -4,18 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:huge_listview/src/draggable_scrollbar.dart';
 import 'package:huge_listview/src/draggable_scrollbar_thumbs.dart';
+import 'package:huge_listview/src/huge_listview_controller.dart';
 import 'package:huge_listview/src/page_result.dart';
 import 'package:quiver/cache.dart';
 import 'package:quiver/collection.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 typedef HugeListViewPageFuture<T> = Future<List<T>> Function(int pageIndex);
-typedef HugeListViewItemBuilder<T> = Widget Function(BuildContext context, int index, T entry);
-typedef HugeListViewErrorBuilder = Widget Function(BuildContext context, dynamic error);
+typedef HugeListViewItemBuilder<T> = Widget Function(
+    BuildContext context, int index, T entry);
+typedef HugeListViewErrorBuilder = Widget Function(
+    BuildContext context, dynamic error);
 
 class HugeListView<T> extends StatefulWidget {
-  /// A [ScrollablePositionedList] controller for jumping or scrolling to an item.
+  /// An optional [ScrollablePositionedList] controller for jumping or scrolling to an item.
+  @Deprecated('Use `scrollController` instead.')
   final ItemScrollController? controller;
+
+  /// An optional [ScrollablePositionedList] controller for jumping or scrolling to an item.
+  final ItemScrollController? scrollController;
+
+  /// An optional [HugeListViewController] controller to control the behavior of the list.
+  /// FIXME: probably required, not optional as totalItemCount was moved there
+  final HugeListViewController? listViewController;
 
   /// Size of the page. [HugeListView] only keeps a few pages of items in memory any time.
   final int pageSize;
@@ -24,7 +35,8 @@ class HugeListView<T> extends StatefulWidget {
   final int startIndex;
 
   /// Total number of items in the list.
-  final int totalCount;
+  @Deprecated('Use `totalItemCount` of the `listViewController` instead.')
+  final int? totalCount;
 
   /// Called to build items for the list with the specified [pageIndex].
   final HugeListViewPageFuture<T> pageFuture;
@@ -52,7 +64,7 @@ class HugeListView<T> extends StatefulWidget {
   final WidgetBuilder? waitBuilder;
 
   /// Called to build a widget when the list is empty.
-  @Deprecated('Use `emptyBuilder`instead.')
+  @Deprecated('Use `emptyBuilder` instead.')
   final WidgetBuilder? emptyResultBuilder;
 
   /// Called to build a widget when the list is empty.
@@ -90,16 +102,19 @@ class HugeListView<T> extends StatefulWidget {
 
   const HugeListView({
     Key? key,
-    this.controller,
+    @Deprecated('Use `scrollController` instead.') this.controller,
+    this.scrollController,
+    this.listViewController,
     required this.pageSize,
     required this.startIndex,
-    required this.totalCount,
+    @Deprecated('Use `totalItemCount` of the `listViewController` instead.')
+    this.totalCount,
     required this.pageFuture,
     required this.thumbBuilder,
     required this.itemBuilder,
     required this.placeholderBuilder,
     this.waitBuilder,
-    this.emptyResultBuilder,
+    @Deprecated('Use `emptyBuilder` instead.') this.emptyResultBuilder,
     this.emptyBuilder,
     this.errorBuilder,
     this.velocityThreshold = 128,
@@ -112,7 +127,7 @@ class HugeListView<T> extends StatefulWidget {
     this.thumbAnimationDuration = kThemeAnimationDuration,
     this.thumbVisibleDuration = const Duration(milliseconds: 1000),
     this.padding,
-    this.lruMap
+    this.lruMap,
   })  : assert(pageSize > 0),
         assert(velocityThreshold >= 0),
         super(key: key);
@@ -124,8 +139,10 @@ class HugeListView<T> extends StatefulWidget {
 class HugeListViewState<T> extends State<HugeListView<T>> {
   final scrollKey = GlobalKey<DraggableScrollbarState>();
   final listener = ItemPositionsListener.create();
+  late HugeListViewController listViewController;
   late final Map<int, HugeListViewPageResult<T>> map;
   late final MapCache<int, HugeListViewPageResult<T>?> cache;
+  late int totalItemCount;
   dynamic error;
   bool _frameCallbackInProgress = false;
 
@@ -133,48 +150,76 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   void initState() {
     super.initState();
 
+    listViewController = widget.listViewController ??
+        HugeListViewController(
+            totalItemCount: widget.totalCount ??
+                -1 >>> 1); // =int.MAX, temporarily until `totalCount` removed
+    listViewController.addListener(onChange);
+    totalItemCount = listViewController.totalItemCount;
+
     _initCache();
     listener.itemPositions.addListener(_sendScroll);
   }
 
   @override
   void dispose() {
+    listViewController.removeListener(onChange);
+    if (widget.listViewController == null) listViewController.dispose();
     listener.itemPositions.removeListener(_sendScroll);
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(HugeListView<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.listViewController == null &&
+        oldWidget.listViewController != null) {
+      listViewController =
+          HugeListViewController.fromValue(oldWidget.listViewController!.value);
+    } else if (widget.listViewController != null &&
+        oldWidget.listViewController == null) {
+      listViewController.dispose();
+    }
   }
 
   void _sendScroll() {
     int current = _currentFirst();
     widget.firstShown?.call(current);
-    scrollKey.currentState?.setPosition(current / widget.totalCount, current);
+    scrollKey.currentState?.setPosition(current / totalItemCount, current);
   }
 
   int _currentFirst() {
     try {
       return listener.itemPositions.value.first.index;
-    }
-    catch (e) {
+    } catch (e) {
       return 0;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (error != null && widget.errorBuilder != null) return widget.errorBuilder!(context, error);
-    if (widget.totalCount == -1 && widget.waitBuilder != null) return widget.waitBuilder!(context);
-    if (widget.totalCount == 0 && widget.emptyBuilder != null) return widget.emptyBuilder!(context);
-    // ignore: deprecated_member_use_from_same_package
-    if (widget.totalCount == 0 && widget.emptyResultBuilder != null) return widget.emptyResultBuilder!(context);
+    if (error != null && widget.errorBuilder != null)
+      return widget.errorBuilder!(context, error);
+    if (totalItemCount == -1 && widget.waitBuilder != null)
+      return widget.waitBuilder!(context);
+    if (totalItemCount == 0 && widget.emptyBuilder != null)
+      return widget.emptyBuilder!(context);
+    if (totalItemCount == 0 && widget.emptyResultBuilder != null)
+      return widget.emptyResultBuilder!(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return DraggableScrollbar(
           key: scrollKey,
-          totalCount: widget.totalCount,
+          totalCount: totalItemCount,
           initialScrollIndex: widget.startIndex,
           scrollDirection: widget.scrollDirection,
           onChange: (position) {
-            widget.controller?.jumpTo(index: (position * widget.totalCount).floor());
+            widget.scrollController
+                ?.jumpTo(index: (position * totalItemCount).floor());
+            widget.controller
+                ?.jumpTo(index: (position * totalItemCount).floor());
           },
           scrollThumbBuilder: widget.thumbBuilder,
           backgroundColor: widget.thumbBackgroundColor,
@@ -186,19 +231,19 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
           thumbVisibleDuration: widget.thumbVisibleDuration,
           child: ScrollablePositionedList.builder(
             padding: widget.padding,
-            itemScrollController: widget.controller,
+            itemScrollController: widget.scrollController ?? widget.controller,
             itemPositionsListener: listener,
             scrollDirection: widget.scrollDirection,
-            physics: _MaxVelocityPhysics(velocityThreshold: widget.velocityThreshold),
+            physics: _MaxVelocityPhysics(
+                velocityThreshold: widget.velocityThreshold),
             initialScrollIndex: widget.startIndex,
-            itemCount: max(widget.totalCount, 0),
+            itemCount: max(totalItemCount, 0),
             itemBuilder: (context, index) {
               final page = index ~/ widget.pageSize;
               final pageResult = map[page];
               final valueIndex = index % widget.pageSize;
               if (pageResult != null && pageResult.items.length > valueIndex) {
-                final value = pageResult.items.elementAt(
-                    valueIndex);
+                final value = pageResult.items.elementAt(valueIndex);
                 if (value != null) {
                   return widget.itemBuilder(context, index, value);
                 }
@@ -211,7 +256,8 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
                     .catchError(_error);
               } else if (!_frameCallbackInProgress) {
                 _frameCallbackInProgress = true;
-                SchedulerBinding.instance.scheduleFrameCallback((d) => _deferredReload(context));
+                SchedulerBinding.instance
+                    .scheduleFrameCallback((d) => _deferredReload(context));
               }
               return ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: 10),
@@ -229,8 +275,23 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   }
 
   void _initCache() {
-    map = widget.lruMap ?? LruMap<int, HugeListViewPageResult<T>>(maximumSize: 256 ~/ widget.pageSize);
+    map = widget.lruMap ??
+        LruMap<int, HugeListViewPageResult<T>>(
+            maximumSize: 256 ~/ widget.pageSize);
     cache = MapCache<int, HugeListViewPageResult<T>>(map: map);
+  }
+
+  void onChange() {
+    if (listViewController.value.doReload) {
+      _doReload(0);
+    } else if (listViewController.value.doInvalidateList) {
+      _invalidateCache();
+      if (listViewController.value.reloadPage) _doReload(0);
+    } else {
+      setState(() {
+        totalItemCount = listViewController.totalItemCount;
+      });
+    }
   }
 
   void _error(dynamic e, StackTrace stackTrace) {
@@ -238,14 +299,17 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
     if (mounted) setState(() => error = e);
   }
 
-  void _reload(HugeListViewPageResult<T>? value) => _doReload(value?.index ?? 0);
+  void _reload(HugeListViewPageResult<T>? value) =>
+      _doReload(value?.index ?? 0);
 
   void _deferredReload(BuildContext context) {
     if (!Scrollable.recommendDeferredLoadingForContext(context)) {
       _frameCallbackInProgress = false;
       _doReload(-1);
     } else
-      SchedulerBinding.instance.scheduleFrameCallback((d) => _deferredReload(context), rescheduling: true);
+      SchedulerBinding.instance.scheduleFrameCallback(
+          (d) => _deferredReload(context),
+          rescheduling: true);
   }
 
   void _doReload(int index) {
@@ -257,20 +321,30 @@ class HugeListViewState<T> extends State<HugeListView<T>> {
   void setPosition(double position) {
     scrollKey.currentState?.setPosition(position, _currentFirst());
   }
+
+  void _invalidateCache() {
+    for (final key in map.keys) {
+      cache.invalidate(key);
+    }
+  }
 }
 
 class _MaxVelocityPhysics extends AlwaysScrollableScrollPhysics {
   final double velocityThreshold;
 
-  const _MaxVelocityPhysics({required this.velocityThreshold, ScrollPhysics? parent}) : super(parent: parent);
+  const _MaxVelocityPhysics(
+      {required this.velocityThreshold, ScrollPhysics? parent})
+      : super(parent: parent);
 
   @override
-  bool recommendDeferredLoading(double velocity, ScrollMetrics metrics, BuildContext context) {
+  bool recommendDeferredLoading(
+      double velocity, ScrollMetrics metrics, BuildContext context) {
     return velocity.abs() > velocityThreshold;
   }
 
   @override
   _MaxVelocityPhysics applyTo(ScrollPhysics? ancestor) {
-    return _MaxVelocityPhysics(velocityThreshold: velocityThreshold, parent: buildParent(ancestor));
+    return _MaxVelocityPhysics(
+        velocityThreshold: velocityThreshold, parent: buildParent(ancestor));
   }
 }

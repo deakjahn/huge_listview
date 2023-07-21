@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:huge_listview/src/slidefade_transition.dart';
 
-typedef ScrollThumbBuilder = Widget Function(Color backgroundColor, Color drawColor, double height, int index, bool alwaysVisibleScrollThumb, Animation<double> thumbAnimation);
+typedef ScrollThumbBuilder = Widget Function(
+    Color backgroundColor,
+    Color drawColor,
+    double height,
+    int index,
+    bool alwaysVisibleScrollThumb,
+    Animation<double> thumbAnimation);
 
 class DraggableScrollbarThumbs {
   static Widget RoundedRectThumb(
@@ -20,7 +26,9 @@ class DraggableScrollbarThumbs {
         constraints: BoxConstraints.tight(Size(16.0, height)),
       ),
     );
-    return alwaysVisibleScrollThumb ? thumb : SlideFadeTransition(animation: thumbAnimation, child: thumb);
+    return alwaysVisibleScrollThumb
+        ? thumb
+        : SlideFadeTransition(animation: thumbAnimation, child: thumb);
   }
 
   static Widget ArrowThumb(
@@ -42,7 +50,9 @@ class DraggableScrollbarThumbs {
         ),
       ),
     );
-    return alwaysVisibleScrollThumb ? thumb : SlideFadeTransition(animation: thumbAnimation, child: thumb);
+    return alwaysVisibleScrollThumb
+        ? thumb
+        : SlideFadeTransition(animation: thumbAnimation, child: thumb);
   }
 
   static Widget SemicircleThumb(
@@ -64,10 +74,13 @@ class DraggableScrollbarThumbs {
           topRight: const Radius.circular(4.0),
           bottomRight: const Radius.circular(4.0),
         ),
-        child: Container(constraints: BoxConstraints.tight(Size(height * 0.6, height))),
+        child: Container(
+            constraints: BoxConstraints.tight(Size(height * 0.6, height))),
       ),
     );
-    return alwaysVisibleScrollThumb ? thumb : SlideFadeTransition(animation: thumbAnimation, child: thumb);
+    return alwaysVisibleScrollThumb
+        ? thumb
+        : SlideFadeTransition(animation: thumbAnimation, child: thumb);
   }
 }
 
@@ -90,15 +103,21 @@ class _ArrowCustomPainter extends CustomPainter {
     final baseX = size.width / 2;
     final baseY = size.height / 2;
 
-    canvas.drawPath(trianglePath(Offset(baseX - 4.0, baseY - 2.0), width, height, true), paint);
-    canvas.drawPath(trianglePath(Offset(baseX - 4.0, baseY + 2.0), width, height, false), paint);
+    canvas.drawPath(
+        trianglePath(Offset(baseX - 4.0, baseY - 2.0), width, height, true),
+        paint);
+    canvas.drawPath(
+        trianglePath(Offset(baseX - 4.0, baseY + 2.0), width, height, false),
+        paint);
   }
 
-  static Path trianglePath(Offset offset, double width, double height, bool isUp) {
+  static Path trianglePath(
+      Offset offset, double width, double height, bool isUp) {
     return Path()
       ..moveTo(offset.dx, offset.dy)
       ..lineTo(offset.dx + width, offset.dy)
-      ..lineTo(offset.dx + (width / 2), isUp ? offset.dy - height : offset.dy + height)
+      ..lineTo(offset.dx + (width / 2),
+          isUp ? offset.dy - height : offset.dy + height)
       ..close();
   }
 }
@@ -121,14 +140,16 @@ class _ArrowClipper extends CustomClipper<Path> {
       ..lineTo(startPointX + arrowWidth / 2, startPointY1 - arrowWidth / 2)
       ..lineTo(startPointX + arrowWidth, startPointY1)
       ..lineTo(startPointX + arrowWidth, startPointY1 + 1.0)
-      ..lineTo(startPointX + arrowWidth / 2, startPointY1 - arrowWidth / 2 + 1.0)
+      ..lineTo(
+          startPointX + arrowWidth / 2, startPointY1 - arrowWidth / 2 + 1.0)
       ..lineTo(startPointX, startPointY1 + 1.0)
       ..close()
       ..moveTo(startPointX + arrowWidth, startPointY2)
       ..lineTo(startPointX + arrowWidth / 2, startPointY2 + arrowWidth / 2)
       ..lineTo(startPointX, startPointY2)
       ..lineTo(startPointX, startPointY2 - 1.0)
-      ..lineTo(startPointX + arrowWidth / 2, startPointY2 + arrowWidth / 2 - 1.0)
+      ..lineTo(
+          startPointX + arrowWidth / 2, startPointY2 + arrowWidth / 2 - 1.0)
       ..lineTo(startPointX + arrowWidth, startPointY2 - 1.0)
       ..close();
   }

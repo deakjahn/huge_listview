@@ -43,7 +43,8 @@ class DraggableScrollbar extends StatefulWidget {
   DraggableScrollbarState createState() => DraggableScrollbarState();
 }
 
-class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProviderStateMixin {
+class DraggableScrollbarState extends State<DraggableScrollbar>
+    with TickerProviderStateMixin {
   double thumbOffset = 0.0;
   int currentFirstIndex = 0;
   bool isDragging = false;
@@ -74,7 +75,9 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
     currentFirstIndex = widget.currentFirstIndex;
     if (widget.initialScrollIndex > 0 && widget.totalCount > 1) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() => thumbOffset = (widget.initialScrollIndex / widget.totalCount) * (thumbMax - thumbMin));
+        setState(() => thumbOffset =
+            (widget.initialScrollIndex / widget.totalCount) *
+                (thumbMax - thumbMin));
       });
     }
   }
@@ -87,10 +90,14 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
   }
 
   @override
-  Widget build(BuildContext context) => NotificationListener<ScrollNotification>(
+  Widget build(BuildContext context) =>
+      NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          if (!isDragging && (notification is ScrollUpdateNotification || notification is OverscrollNotification)) {
-            if (thumbAnimationController.status != AnimationStatus.forward) thumbAnimationController.forward();
+          if (!isDragging &&
+              (notification is ScrollUpdateNotification ||
+                  notification is OverscrollNotification)) {
+            if (thumbAnimationController.status != AnimationStatus.forward)
+              thumbAnimationController.forward();
             fadeoutTimer?.cancel();
             fadeoutTimer = Timer(widget.thumbVisibleDuration, () {
               thumbAnimationController.reverse();
@@ -160,13 +167,18 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
 
   void onDragUpdate(DragUpdateDetails details) {
     setState(() {
-      if (thumbAnimationController.status != AnimationStatus.forward) thumbAnimationController.forward();
-      if (isDragging && details.delta.dy != 0 && widget.scrollDirection == Axis.vertical) {
+      if (thumbAnimationController.status != AnimationStatus.forward)
+        thumbAnimationController.forward();
+      if (isDragging &&
+          details.delta.dy != 0 &&
+          widget.scrollDirection == Axis.vertical) {
         thumbOffset += details.delta.dy;
         thumbOffset = thumbOffset.clamp(thumbMin, thumbMax);
         double position = thumbOffset / (thumbMax - thumbMin);
         widget.onChange?.call(position);
-      } else if (isDragging && details.delta.dx != 0 && widget.scrollDirection == Axis.horizontal) {
+      } else if (isDragging &&
+          details.delta.dx != 0 &&
+          widget.scrollDirection == Axis.horizontal) {
         thumbOffset += details.delta.dx;
         thumbOffset = thumbOffset.clamp(thumbMin, thumbMax);
         double position = thumbOffset / (thumbMax - thumbMin);
@@ -185,22 +197,26 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
 
   void keyHandler(RawKeyEvent value) {
     if (value.runtimeType == RawKeyDownEvent) {
-      if (widget.scrollDirection == Axis.vertical && value.logicalKey == LogicalKeyboardKey.arrowDown)
+      if (widget.scrollDirection == Axis.vertical &&
+          value.logicalKey == LogicalKeyboardKey.arrowDown)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
           delta: const Offset(0, 2),
         ));
-      else if (widget.scrollDirection == Axis.vertical && value.logicalKey == LogicalKeyboardKey.arrowUp)
+      else if (widget.scrollDirection == Axis.vertical &&
+          value.logicalKey == LogicalKeyboardKey.arrowUp)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
           delta: const Offset(0, -2),
         ));
-      else if (widget.scrollDirection == Axis.horizontal && value.logicalKey == LogicalKeyboardKey.arrowRight)
+      else if (widget.scrollDirection == Axis.horizontal &&
+          value.logicalKey == LogicalKeyboardKey.arrowRight)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
           delta: const Offset(2, 0),
         ));
-      else if (widget.scrollDirection == Axis.horizontal && value.logicalKey == LogicalKeyboardKey.arrowLeft)
+      else if (widget.scrollDirection == Axis.horizontal &&
+          value.logicalKey == LogicalKeyboardKey.arrowLeft)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
           delta: const Offset(-2, 0),
@@ -208,12 +224,16 @@ class DraggableScrollbarState extends State<DraggableScrollbar> with TickerProvi
       else if (value.logicalKey == LogicalKeyboardKey.pageDown)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: widget.scrollDirection == Axis.horizontal ? const Offset(25, 0) : const Offset(0, 25),
+          delta: widget.scrollDirection == Axis.horizontal
+              ? const Offset(25, 0)
+              : const Offset(0, 25),
         ));
       else if (value.logicalKey == LogicalKeyboardKey.pageUp)
         onDragUpdate(DragUpdateDetails(
           globalPosition: Offset.zero,
-          delta: widget.scrollDirection == Axis.horizontal ? const Offset(-25, 0) : const Offset(0, -25),
+          delta: widget.scrollDirection == Axis.horizontal
+              ? const Offset(-25, 0)
+              : const Offset(0, -25),
         ));
     }
   }
