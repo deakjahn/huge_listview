@@ -7,7 +7,7 @@ only keeps a handful of pages (in other words, a few hundred items at most) all 
 as new ones come in. The list asks for a pageful of items at once, in an async function, expecting to receive
 a `Future<List<T>>` of your items.
 
-This approach means that the actual number of items in the list make no difference. Hundreds of thousands or
+This approach means that the actual number of items in the list makes no difference. Hundreds of thousands or
 even millions of items are all the same. You never have to read and keep all of them in memory at the same time.
 
 Instead of a regular `ListView`, it uses a `ScrollablePositionedList` inside that makes it possible to scroll
