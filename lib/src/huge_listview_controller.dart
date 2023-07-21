@@ -34,7 +34,6 @@ class HugeListViewController
   }
 }
 
-@immutable
 class HugeListViewControllerValue {
   final int totalItemCount;
   final bool doReload;
