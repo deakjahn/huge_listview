@@ -25,7 +25,6 @@ class HugeListView<T> extends StatefulWidget {
   final ItemScrollController? scrollController;
 
   /// An optional [HugeListViewController] controller to control the behavior of the list.
-  /// FIXME: probably required, not optional as totalItemCount was moved there
   final HugeListViewController? listViewController;
 
   /// Size of the page. [HugeListView] only keeps a few pages of items in memory any time.

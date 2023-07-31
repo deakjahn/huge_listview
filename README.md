@@ -37,7 +37,7 @@ HugeListView<MyDataItem>(
   key: listKey,
   /// Only needed if you expect to make use of its [jumpTo] or [scrollTo] functions (the thumb expects it, though).
   scrollController: scroll,
-  /// Only needed if you expect to make use of its... FIXME: probably ends up required
+  /// Only needed if you expect to provide the total count of items.
   listViewController: controller,
   /// Size of the page. [HugeListView] only keeps a few pages of items in memory any time.
   pageSize: PAGE_SIZE,
