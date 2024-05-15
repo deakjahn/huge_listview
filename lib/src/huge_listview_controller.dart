@@ -20,8 +20,7 @@ class HugeListViewController
       : super(HugeListViewControllerValue(totalItemCount, false, false, false));
 
   /// Creates a controller for a [HugeListView] widget from an initial [HugeListViewControllerValue].
-  HugeListViewController.fromValue(HugeListViewControllerValue value)
-      : super(value);
+  HugeListViewController.fromValue(super.value);
 
   void reload() {
     value = value.copyWith(doReload: true);

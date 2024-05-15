@@ -100,7 +100,7 @@ class HugeListView<T> extends StatefulWidget {
   final LruMap<int, HugeListViewPageResult<T>>? lruMap;
 
   const HugeListView({
-    Key? key,
+    super.key,
     @Deprecated('Use `scrollController` instead.') this.controller,
     this.scrollController,
     this.listViewController,
@@ -128,8 +128,7 @@ class HugeListView<T> extends StatefulWidget {
     this.padding,
     this.lruMap,
   })  : assert(pageSize > 0),
-        assert(velocityThreshold >= 0),
-        super(key: key);
+        assert(velocityThreshold >= 0);
 
   @override
   HugeListViewState<T> createState() => HugeListViewState<T>();
@@ -332,8 +331,7 @@ class _MaxVelocityPhysics extends AlwaysScrollableScrollPhysics {
   final double velocityThreshold;
 
   const _MaxVelocityPhysics(
-      {required this.velocityThreshold, ScrollPhysics? parent})
-      : super(parent: parent);
+      {required this.velocityThreshold, super.parent});
 
   @override
   bool recommendDeferredLoading(

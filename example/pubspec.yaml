@@ -16,8 +16,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  huge_listview: ^2.0.10
-  flutter_lints: ^2.0.2
+  huge_listview: ^2.0.11
+  flutter_lints: ^3.0.0
 
 dependency_overrides:
   huge_listview:

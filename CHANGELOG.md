@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.12] - 2024-05-15
+
+* Upgrade dependent versions.
+
 ## [2.0.11] - 2023-07-31
 
 * Controller, reloading the list (see https://github.com/deakjahn/huge_listview/issues/7 and https://github.com/deakjahn/huge_listview/pull/13).

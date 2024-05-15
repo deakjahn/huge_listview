@@ -22,7 +22,7 @@ class DraggableScrollbar extends StatefulWidget {
   final Axis scrollDirection;
 
   const DraggableScrollbar({
-    Key? key,
+    super.key,
     required this.child,
     this.backgroundColor = Colors.white,
     this.drawColor = Colors.grey,
@@ -37,7 +37,7 @@ class DraggableScrollbar extends StatefulWidget {
     required this.scrollThumbBuilder,
     this.onChange,
     this.scrollDirection = Axis.vertical,
-  }) : super(key: key);
+  });
 
   @override
   DraggableScrollbarState createState() => DraggableScrollbarState();
